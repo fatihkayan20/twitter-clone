@@ -1,0 +1,203 @@
+import { useSignUp } from "@clerk/clerk-expo";
+import * as React from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { FromInput } from "../../components/form/FromInput";
+import { useRouter } from "expo-router";
+
+const inputs = [
+  {
+    placeholder: "Name",
+    key: "firstName",
+  },
+  {
+    placeholder: "Username",
+    key: "username",
+  },
+  {
+    placeholder: "Email address",
+    key: "emailAddress",
+  },
+  {
+    placeholder: "Date of birth",
+    key: "birthday",
+  },
+  {
+    placeholder: "Password",
+    key: "password",
+    props: {
+      secureTextEntry: true,
+    },
+  },
+  {
+    placeholder: "Confirm password",
+    key: "confirmPassword",
+    props: {
+      secureTextEntry: true,
+    },
+  },
+];
+
+export default function Page() {
+  const { isLoaded, signUp, setActive } = useSignUp();
+
+  const [state, setState] = React.useState({
+    emailAddress: "",
+    password: "",
+    pendingVerification: false,
+    code: "",
+    birthday: "",
+    firstName: "",
+    confirmPassword: "",
+    username: "",
+  });
+
+  const [errors, setErrors] = React.useState({
+    emailAddress: "",
+    password: "",
+    birthday: "",
+    firstName: "",
+    confirmPassword: "",
+    username: "",
+  });
+
+  const router = useRouter();
+
+  const handleChange = (key: keyof typeof state, value: string) => {
+    setState((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    if (!isLoaded) {
+      return;
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      confirmPassword: "",
+      emailAddress: "",
+      password: "",
+      birthday: "",
+      firstName: "",
+      username: "",
+    }));
+
+    if (state.password.length < 8 || state.password !== state.confirmPassword) {
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword:
+          "Password must be at least 8 characters long and match the confirm password field.",
+      }));
+      return;
+    }
+
+    try {
+      const { emailAddress, password, birthday, firstName, username } = state;
+
+      await signUp.create({
+        emailAddress,
+        password,
+        birthday,
+        username,
+      });
+
+      // send the email.
+      await signUp
+        .prepareEmailAddressVerification({ strategy: "email_code" })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(JSON.stringify(err, null, 2));
+        });
+
+      // change the UI to our pending section.
+      setState((prev) => ({
+        ...prev,
+        pendingVerification: true,
+      }));
+    } catch (err) {
+      const errors = err.errors;
+      let newErrors = {};
+
+      errors.forEach((error) => {
+        newErrors = {
+          ...newErrors,
+          [error.meta.paramName]: error.longMessage,
+        };
+      });
+
+      setErrors((prev) => ({
+        ...prev,
+        ...newErrors,
+      }));
+    }
+  };
+
+  const onPressVerify = async () => {
+    if (!isLoaded) {
+      return;
+    }
+
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code: state.code,
+      });
+      if (completeSignUp.status !== "complete") {
+        /*  investigate the response, to see if there was an error
+         or if the user needs to complete more steps.*/
+        console.log(JSON.stringify(completeSignUp, null, 2));
+      }
+      if (completeSignUp.status === "complete") {
+        await setActive({ session: completeSignUp.createdSessionId });
+        router.push("/tweets");
+      }
+    } catch (err) {
+      console.error(JSON.stringify(err, null, 2));
+    }
+  };
+
+  if (state.pendingVerification) {
+    return (
+      <View className="flex-1 p-3">
+        <Text className="text-xl font-bold">Verify your email</Text>
+        <FromInput
+          placeholder="Verification code"
+          value={state.code}
+          onChangeText={(value) => handleChange("code", value)}
+        />
+        <Pressable
+          onPress={onPressVerify}
+          className="items-center rounded-md bg-blue-500 p-3 text-white"
+        >
+          <Text className="text-white">Verify</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1 p-3">
+      <Text className="text-xl font-bold">Create your account</Text>
+      {inputs.map((input) => (
+        <FromInput
+          placeholder={input.placeholder}
+          onChangeText={(value) => handleChange(input.key, value)}
+          value={state[input.key]}
+          key={input.key}
+          error={errors[input.key]}
+          {...input.props}
+        />
+      ))}
+
+      <Pressable
+        onPress={handleSubmit}
+        className="items-center rounded-md bg-blue-500 p-3 text-white"
+      >
+        <Text className="text-white">Create account</Text>
+      </Pressable>
+    </View>
+  );
+}

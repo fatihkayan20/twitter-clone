@@ -15,7 +15,7 @@ export default function Layout() {
       <TRPCProvider>
         <SignedIn>
           <SafeAreaProvider>
-            {/* <Tabs /> */}
+            <Tabs></Tabs>
             <StatusBar />
           </SafeAreaProvider>
         </SignedIn>
@@ -26,6 +26,12 @@ export default function Layout() {
                 name="(auth)/login"
                 options={{
                   title: "Login",
+                }}
+              />
+              <Stack.Screen
+                name="(auth)/register"
+                options={{
+                  title: "Register",
                 }}
               />
             </Stack>
