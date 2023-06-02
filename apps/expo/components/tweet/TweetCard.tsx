@@ -2,6 +2,7 @@ import { RouterOutput } from "@acme/api";
 import * as React from "react";
 import { Image, Text, View, useWindowDimensions } from "react-native";
 import { formatDistanceToNow } from "date-fns";
+import { TweetActions } from "./TweetActions";
 
 interface TweetCardProps {
   tweet: RouterOutput["tweet"]["all"][number];
@@ -34,6 +35,8 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
         </View>
 
         <Text className="mt-2 w-full flex-wrap text-sm">{tweet.content}</Text>
+
+        <TweetActions likes={tweet.likes} tweetId={tweet.id} />
       </View>
     </View>
   );
