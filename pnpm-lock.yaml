@@ -45,6 +45,9 @@ importers:
       '@clerk/clerk-expo':
         specifier: ^0.15.0
         version: 0.15.0(@babel/core@7.20.5)(@types/react@18.0.26)(expo-auth-session@4.0.3)(expo-web-browser@12.1.1)(react-dom@18.2.0)(react-native@0.70.5)(react@18.2.0)
+      '@expo/vector-icons':
+        specifier: ^13.0.0
+        version: 13.0.0
       '@shopify/flash-list':
         specifier: ^1.4.0
         version: 1.4.0(@babel/runtime@7.20.6)(react-native@0.70.5)(react@18.2.0)
@@ -60,6 +63,9 @@ importers:
       '@trpc/server':
         specifier: ^10.1.0
         version: 10.5.0
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
       expo:
         specifier: ^48.0.6
         version: 48.0.10(@babel/core@7.20.5)
@@ -1526,13 +1532,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       core-js-pure: 3.26.1
-      regenerator-runtime: 0.13.11
-    dev: true
-
-  /@babel/runtime@7.20.13:
-    resolution: {integrity: sha512-gt3PKXs0DBoL9xCvOIIZ2NEqAGZqHjAnmVbfQtB620V0uReIQutpel14KcneZuer7UioY8ALKZ7iocavvzTNFA==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
       regenerator-runtime: 0.13.11
     dev: true
 
@@ -4812,6 +4811,13 @@ packages:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
     dev: true
 
+  /date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.21.0
+    dev: false
+
   /dayjs@1.11.7:
     resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
     dev: false
@@ -5306,7 +5312,7 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.21.0
       aria-query: 4.2.2
       array-includes: 3.1.6
       ast-types-flow: 0.0.7
@@ -7779,7 +7785,7 @@ packages:
   /metro-runtime@0.72.3:
     resolution: {integrity: sha512-3MhvDKfxMg2u7dmTdpFOfdR71NgNNo4tzAyJumDVQKwnHYHN44f2QFZQqpPBEmqhWlojNeOxsqFsjYgeyMx6VA==}
     dependencies:
-      '@babel/runtime': 7.20.6
+      '@babel/runtime': 7.21.0
       react-refresh: 0.4.3
     dev: false
 
@@ -9510,7 +9516,7 @@ packages:
   /regenerator-transform@0.15.1:
     resolution: {integrity: sha512-knzmNAcuyxV+gQCufkYcvOqX/qIIfHLv0u5x79kRxuGojfYVky1f15TzZEu2Avte8QGepvUNTnLskf8E6X6Vyg==}
     dependencies:
-      '@babel/runtime': 7.20.6
+      '@babel/runtime': 7.21.0
 
   /regex-not@1.0.2:
     resolution: {integrity: sha512-J6SDjUgDxQj5NusnOtdFxDwN/+HWykR8GELwctJ7mdqhcyy1xEc4SRFHUXvxTp661YaVKAjfRLZ9cCqS6tn32A==}

@@ -1,10 +1,22 @@
 import { useSignUp } from "@clerk/clerk-expo";
 import * as React from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { FromInput } from "../../components/form/FromInput";
 import { useRouter } from "expo-router";
 
-const inputs = [
+interface IInput {
+  placeholder: string;
+  key:
+    | "firstName"
+    | "username"
+    | "emailAddress"
+    | "birthday"
+    | "password"
+    | "confirmPassword";
+  props?: Partial<React.ComponentProps<typeof FromInput>>;
+}
+
+const inputs: IInput[] = [
   {
     placeholder: "Name",
     key: "firstName",
@@ -37,8 +49,18 @@ const inputs = [
   },
 ];
 
+interface IClerkSignUpError {
+  errors: {
+    meta: {
+      paramName: string;
+    };
+    longMessage: string;
+  }[];
+}
+
 export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const router = useRouter();
 
   const [state, setState] = React.useState({
     emailAddress: "",
@@ -60,13 +82,15 @@ export default function Page() {
     username: "",
   });
 
-  const router = useRouter();
-
-  const handleChange = (key: keyof typeof state, value: string) => {
+  const handleChange = (key: string, value: string) => {
     setState((prev) => ({
       ...prev,
       [key]: value,
     }));
+  };
+
+  const handleNavigateLogin = () => {
+    router.push("/login");
   };
 
   const handleSubmit = async () => {
@@ -94,7 +118,7 @@ export default function Page() {
     }
 
     try {
-      const { emailAddress, password, birthday, firstName, username } = state;
+      const { emailAddress, password, birthday, username } = state;
 
       await signUp.create({
         emailAddress,
@@ -119,10 +143,11 @@ export default function Page() {
         pendingVerification: true,
       }));
     } catch (err) {
-      const errors = err.errors;
+      const errors = err as IClerkSignUpError;
+
       let newErrors = {};
 
-      errors.forEach((error) => {
+      errors.errors.forEach((error) => {
         newErrors = {
           ...newErrors,
           [error.meta.paramName]: error.longMessage,
@@ -161,7 +186,7 @@ export default function Page() {
 
   if (state.pendingVerification) {
     return (
-      <View className="flex-1 p-3">
+      <View className="flex-1 justify-center p-3">
         <Text className="text-xl font-bold">Verify your email</Text>
         <FromInput
           placeholder="Verification code"
@@ -179,7 +204,7 @@ export default function Page() {
   }
 
   return (
-    <View className="flex-1 p-3">
+    <View className="flex-1 justify-center p-3">
       <Text className="text-xl font-bold">Create your account</Text>
       {inputs.map((input) => (
         <FromInput
@@ -198,6 +223,13 @@ export default function Page() {
       >
         <Text className="text-white">Create account</Text>
       </Pressable>
+
+      <Text className="mt-5 text-right ">
+        Do you have already an account?{" "}
+        <Text className="text-blue-500" onPress={handleNavigateLogin}>
+          Login...
+        </Text>
+      </Text>
     </View>
   );
 }
