@@ -87,10 +87,4 @@ export const tweetRouter = router({
         },
       });
     }),
-
-  create: protectedProcedure
-    .input(z.object({ title: z.string(), content: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.tweet.create({ data: input });
-    }),
 });
