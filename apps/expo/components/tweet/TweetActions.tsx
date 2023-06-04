@@ -2,10 +2,9 @@ import { EvilIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { Pressable, Text, View } from "react-native";
 import { useLike } from "@/hooks/tweet/useLike";
-import { Like, Tweet } from ".prisma/client";
 
 interface TweetActionsProps {
-  likes: Like[];
+  isLiked: boolean;
   tweetId: string;
   counts: {
     likes: number;
@@ -14,13 +13,14 @@ interface TweetActionsProps {
 }
 
 export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
-  likes,
+  isLiked: initialIsLiked,
   counts,
   tweetId,
 }) => {
   const { handleLike, isLiked, likeCount } = useLike({
     tweetId,
-    likes,
+    isLiked: initialIsLiked,
+    likeCount: counts.likes,
   });
 
   return (

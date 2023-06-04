@@ -21,8 +21,6 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
   const { width } = useWindowDimensions();
   const router = useRouter();
 
-  console.log({ tweet });
-
   const handleNavigateToTweetDetail = React.useCallback(() => {
     router.push(`/(home)/tweet/${tweet.id}`);
   }, [tweet.id, router]);
@@ -54,7 +52,7 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
         <Text className="mt-2 w-full flex-wrap text-sm">{tweet.content}</Text>
 
         <TweetActions
-          likes={tweet.likes}
+          isLiked={tweet.isLiked}
           tweetId={tweet.id}
           counts={{
             likes: tweet._count.likes,

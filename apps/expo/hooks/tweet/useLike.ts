@@ -1,27 +1,23 @@
 import * as React from "react";
 import { trpc } from "@/utils/trpc";
-import { useAuth } from "@clerk/clerk-expo";
 import { useDebounce } from "../comon/useDebounce";
-import { Like } from ".prisma/client";
 
 interface IUseLikeProps {
-  likes: Like[];
+  isLiked: boolean;
+  likeCount: number;
   tweetId: string;
 }
 
-export const useLike = ({ likes, tweetId }: IUseLikeProps) => {
+export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
   const utils = trpc.useContext();
-  const { userId } = useAuth();
-  const firstLikeStatus = React.useRef(
-    likes?.some((like) => like.userId === userId),
-  );
+  const firstLikeStatus = React.useRef(isLiked);
 
   const { mutateAsync: likeTweet, isLoading } =
     trpc.tweet.likeTweet.useMutation();
 
   const [state, setState] = React.useState({
-    isLiked: likes?.some((like) => like.userId === userId),
-    likeCount: likes?.length ?? 0,
+    isLiked: isLiked,
+    likeCount: likeCount ?? 0,
   });
 
   const debounced = useDebounce(
@@ -33,12 +29,12 @@ export const useLike = ({ likes, tweetId }: IUseLikeProps) => {
   React.useEffect(() => {
     setState((prev) => ({
       ...prev,
-      isLiked: likes?.some((like) => like.userId === userId),
-      likeCount: likes?.length ?? 0,
+      isLiked: isLiked,
+      likeCount: likeCount ?? 0,
     }));
 
-    firstLikeStatus.current = likes?.some((like) => like.userId === userId);
-  }, [likes]);
+    firstLikeStatus.current = isLiked;
+  }, [isLiked, likeCount]);
 
   const handleLike = async () => {
     setState((prev) => ({

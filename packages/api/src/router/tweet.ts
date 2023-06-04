@@ -3,8 +3,8 @@ import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 
 export const tweetRouter = router({
-  all: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.tweet.findMany({
+  all: publicProcedure.query(async ({ ctx }) => {
+    const tweets = await ctx.prisma.tweet.findMany({
       where: {
         parent: null,
       },
@@ -27,6 +27,15 @@ export const tweetRouter = router({
       orderBy: {
         createdAt: "desc",
       },
+    });
+
+    return tweets.map((tweet) => {
+      const { likes, ...rest } = tweet;
+
+      return {
+        ...rest,
+        isLiked: likes.length > 0,
+      };
     });
   }),
   getById: publicProcedure
