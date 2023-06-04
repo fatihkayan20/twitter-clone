@@ -7,6 +7,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
+const unwantedRoutes = ["(auth)/login", "(auth)/register", "index"];
+
 export default function Layout() {
   return (
     <ClerkProvider
@@ -18,9 +20,10 @@ export default function Layout() {
           <SafeAreaProvider>
             <Tabs>
               <Tabs.Screen
-                name="(home)/tweets"
+                name="(home)/tweet"
                 options={{
                   title: "Home",
+                  headerShown: false,
                   tabBarIcon: ({ focused }) => (
                     <AntDesign
                       name="home"
@@ -32,24 +35,15 @@ export default function Layout() {
                 }}
               />
 
-              <Tabs.Screen
-                name="(auth)/login"
-                options={{
-                  href: null,
-                }}
-              />
-              <Tabs.Screen
-                name="(auth)/register"
-                options={{
-                  href: null,
-                }}
-              />
-              <Tabs.Screen
-                name="index"
-                options={{
-                  href: null,
-                }}
-              />
+              {unwantedRoutes.map((route) => (
+                <Tabs.Screen
+                  key={route}
+                  name={route}
+                  options={{
+                    href: null,
+                  }}
+                />
+              ))}
             </Tabs>
             <StatusBar />
           </SafeAreaProvider>

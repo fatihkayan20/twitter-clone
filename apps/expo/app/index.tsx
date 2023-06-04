@@ -9,7 +9,7 @@ export default function Page() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/tweets" />;
+    return <Redirect href="/tweet" />;
   }
 
   return <Redirect href="login" />;

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Text, View } from "react-native";
-import { trpc } from "../../utils/trpc";
-import { TweetCard } from "../../components/tweet/TweetCard";
+import { trpc } from "../../../utils/trpc";
+import { TweetCard } from "../../../components/tweet/TweetCard";
 import { FlashList } from "@shopify/flash-list";
 
 export default function Page() {

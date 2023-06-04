@@ -5,15 +5,48 @@ import { v4 as uuidv4 } from "uuid";
 export const tweetRouter = router({
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.tweet.findMany({
+      where: {
+        parent: null,
+      },
+
       include: {
         user: true,
-        likes: true,
+        likes: {
+          where: {
+            userId: ctx.auth.userId,
+          },
+        },
+        _count: {
+          select: {
+            subTweets: true,
+            likes: true,
+          },
+        },
       },
+
       orderBy: {
         createdAt: "desc",
       },
     });
   }),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.tweet.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          user: true,
+          _count: {
+            select: {
+              subTweets: true,
+              likes: true,
+            },
+          },
+        },
+      });
+    }),
 
   likeTweet: protectedProcedure
     .input(z.object({ tweetId: z.string() }))

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { trpc } from "../../../utils/trpc";
+import { trpc } from "@/utils/trpc";
 import { useAuth } from "@clerk/clerk-expo";
 import { useDebounce } from "../comon/useDebounce";
 import { Like } from ".prisma/client";

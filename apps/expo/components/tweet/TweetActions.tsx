@@ -1,16 +1,21 @@
 import { EvilIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { Pressable, Text, View } from "react-native";
-import { useLike } from "../../app/hooks/tweet/useLike";
-import { Like } from ".prisma/client";
+import { useLike } from "@/hooks/tweet/useLike";
+import { Like, Tweet } from ".prisma/client";
 
 interface TweetActionsProps {
   likes: Like[];
   tweetId: string;
+  counts: {
+    likes: number;
+    subTweets: number;
+  };
 }
 
 export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
   likes,
+  counts,
   tweetId,
 }) => {
   const { handleLike, isLiked, likeCount } = useLike({
@@ -23,7 +28,7 @@ export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
       <Pressable className="flex-row gap-1">
         <EvilIcons name="comment" size={20} color="gray" />
 
-        <Text className="text-xs text-gray-500">{0}</Text>
+        <Text className="text-xs text-gray-500">{counts.subTweets}</Text>
       </Pressable>
 
       <Pressable className="flex-row gap-1">
