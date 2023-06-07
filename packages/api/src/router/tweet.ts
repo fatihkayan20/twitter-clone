@@ -38,15 +38,39 @@ export const tweetRouter = router({
       };
     });
   }),
+
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.prisma.tweet.findUnique({
+    .query(async ({ ctx, input }) => {
+      const tweetDetail = await ctx.prisma.tweet.findUnique({
         where: {
           id: input.id,
         },
         include: {
           user: true,
+          likes: {
+            where: {
+              userId: ctx.auth.userId,
+            },
+          },
+          subTweets: {
+            take: 1,
+            include: {
+              user: true,
+              likes: {
+                where: {
+                  userId: ctx.auth.userId,
+                },
+              },
+              _count: {
+                select: {
+                  subTweets: true,
+                  likes: true,
+                },
+              },
+            },
+          },
+
           _count: {
             select: {
               subTweets: true,
@@ -54,6 +78,66 @@ export const tweetRouter = router({
             },
           },
         },
+      });
+
+      if (!tweetDetail) {
+        throw new Error("Tweet not found");
+      }
+
+      const { likes, subTweets, ...rest } = tweetDetail;
+
+      return {
+        ...rest,
+        isLiked: likes.length > 0,
+        subTweets: subTweets.map((tweet) => {
+          const { likes, ...rest } = tweet;
+
+          return {
+            ...rest,
+            isLiked: likes.length > 0,
+            hasMore: rest._count.subTweets > 1,
+          };
+        }),
+      };
+    }),
+
+  getSubTweets: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const subTweets = await ctx.prisma.tweet.findMany({
+        where: {
+          parent: {
+            id: input.id,
+          },
+        },
+
+        include: {
+          user: true,
+          likes: {
+            where: {
+              userId: ctx.auth.userId,
+            },
+          },
+          _count: {
+            select: {
+              subTweets: true,
+              likes: true,
+            },
+          },
+        },
+
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return subTweets.map((tweet) => {
+        const { likes, ...rest } = tweet;
+
+        return {
+          ...rest,
+          isLiked: likes.length > 0,
+        };
       });
     }),
 

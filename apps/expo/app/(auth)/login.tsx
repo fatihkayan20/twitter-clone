@@ -31,6 +31,7 @@ export default function Page() {
   const [state, setState] = React.useState({
     email: "",
     password: "",
+    error: "",
   });
 
   const handleChange = (key: keyof typeof state, value: string) => {
@@ -50,6 +51,7 @@ export default function Page() {
 
   const handleLogin = async () => {
     const { email, password } = state;
+    setState((prev) => ({ ...prev, error: "" }));
 
     await signIn
       .create({
@@ -64,7 +66,9 @@ export default function Page() {
           console.log(result);
         }
       })
-      .catch((err) => console.error("error", err.errors[0].longMessage));
+      .catch((err) =>
+        setState((prev) => ({ ...prev, error: err.errors[0].longMessage })),
+      );
   };
 
   return (
@@ -86,6 +90,10 @@ export default function Page() {
       >
         <Text className="text-white">Create account</Text>
       </Pressable>
+
+      {state.error && (
+        <Text className="mt-2 text-center text-red-500">{state.error}</Text>
+      )}
 
       <Text className="mt-5 text-right ">
         Don't you have an account?

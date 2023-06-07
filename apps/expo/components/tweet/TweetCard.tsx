@@ -10,6 +10,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { TweetActions } from "./TweetActions";
 import { useRouter } from "expo-router";
+import { Avatar } from "./Avatar";
 
 interface TweetCardProps {
   tweet: RouterOutput["tweet"]["all"][number];
@@ -28,12 +29,9 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
   return (
     <Pressable
       onPress={handleNavigateToTweetDetail}
-      className="flex flex-row gap-2  p-3 "
+      className="flex flex-row gap-x-2 p-3"
     >
-      <Image
-        source={{ uri: tweet.user?.profilePicture ?? "" }}
-        className="h-10 w-10 rounded-full"
-      />
+      <Avatar url={tweet.user?.profilePicture} />
 
       <View
         className="flex-wrap "
