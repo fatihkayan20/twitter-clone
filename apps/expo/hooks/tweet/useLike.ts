@@ -45,6 +45,7 @@ export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
 
     debounced({ tweetId }).then(() => {
       utils.tweet.all.invalidate();
+      utils.tweet.getById.invalidate({ id: tweetId });
     });
   };
 

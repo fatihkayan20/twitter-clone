@@ -5,7 +5,7 @@ import { tokenCache } from "../utils/cache";
 import { TRPCProvider } from "../utils/trpc";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 const unwantedRoutes = ["(auth)/login", "(auth)/register", "index"];
 
@@ -27,7 +27,23 @@ export default function Layout() {
                   tabBarIcon: ({ focused }) => (
                     <AntDesign
                       name="home"
-                      color={focused ? "#000" : "#333"}
+                      color={focused ? "#000" : "rgba(136, 153, 166, .7)"}
+                      size={24}
+                    />
+                  ),
+                  tabBarShowLabel: false,
+                }}
+              />
+
+              <Tabs.Screen
+                name="notification"
+                options={{
+                  title: "Notifications",
+                  headerShown: false,
+                  tabBarIcon: ({ focused }) => (
+                    <Ionicons
+                      name="notifications-outline"
+                      color={focused ? "#000" : "rgba(136, 153, 166, .7)"}
                       size={24}
                     />
                   ),
