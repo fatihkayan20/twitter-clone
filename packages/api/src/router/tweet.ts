@@ -37,4 +37,12 @@ export const tweetRouter = router({
 
       return likeResponse;
     }),
+
+  createTweet: protectedProcedure
+    .input(z.object({ content: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const tweetResponse = await tweetService.createTweet(ctx, input);
+
+      return tweetResponse;
+    }),
 });

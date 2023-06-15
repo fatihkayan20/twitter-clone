@@ -1,4 +1,5 @@
 import { Context } from "../context";
+import { createUuid } from "../utils";
 
 const getAllTweets = async (ctx: Context) => {
   const tweets = await ctx.prisma.tweet.findMany({
@@ -134,8 +135,27 @@ const getSubTweets = async (ctx: Context, input: { id: string }) => {
   });
 };
 
+const createTweet = async (ctx: Context, input: { content: string }) => {
+  const validId = createUuid();
+
+  const tweet = await ctx.prisma.tweet.create({
+    data: {
+      id: validId,
+      content: input.content,
+      user: {
+        connect: {
+          id: ctx.auth.userId ?? "",
+        },
+      },
+    },
+  });
+
+  return tweet;
+};
+
 export default {
   getAllTweets,
   getTweetDetail,
   getSubTweets,
+  createTweet,
 };

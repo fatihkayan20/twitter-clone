@@ -21,6 +21,14 @@ export default function TweetLayout() {
           },
         }}
       />
+
+      <Stack.Screen
+        name="create/index"
+        options={{
+          presentation: "modal",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
