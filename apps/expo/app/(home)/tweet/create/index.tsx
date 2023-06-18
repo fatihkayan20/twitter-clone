@@ -55,6 +55,7 @@ const CreateTweet: React.FC = () => {
           placeholder="What's happening?"
           value={tweet}
           onChangeText={setTweet}
+          autoFocus
         />
       </View>
     </View>
