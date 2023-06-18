@@ -13,7 +13,7 @@ import { useRouter } from "expo-router";
 import { Avatar } from "./Avatar";
 
 interface TweetCardProps {
-  tweet: RouterOutput["tweet"]["all"][number];
+  tweet: RouterOutput["tweet"]["all"]["items"][number];
 }
 
 export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
@@ -29,17 +29,12 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
   return (
     <Pressable
       onPress={handleNavigateToTweetDetail}
-      className="flex flex-row gap-x-2 p-3"
+      className="flex flex-row space-x-2 py-2 px-1"
     >
       <Avatar url={tweet.user?.profilePicture} />
 
-      <View
-        className="flex-wrap "
-        style={{
-          width: width - 70,
-        }}
-      >
-        <View className="flex flex-row gap-1">
+      <View className="flex-1">
+        <View className="flex flex-row space-x-1">
           <Text className="font-bold">{tweet.user?.name}</Text>
           <Text className="text-xs text-gray-600">@{tweet.user?.username}</Text>
           <Text className="text-xs text-gray-600">
@@ -47,8 +42,7 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
           </Text>
         </View>
 
-        <Text className="mt-2 w-full flex-wrap text-sm">{tweet.content}</Text>
-
+        <Text className="mt-1.5 w-full flex-wrap text-sm">{tweet.content}</Text>
         <TweetActions
           isLiked={tweet.isLiked}
           tweetId={tweet.id}
