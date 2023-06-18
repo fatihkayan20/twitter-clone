@@ -6,20 +6,22 @@ import { useUser } from "@clerk/clerk-expo";
 import { Avatar } from "@/components/tweet/Avatar";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "expo-router";
+import { LoadingButton } from "@/components/button/LoadingButton";
 
 const CreateTweet: React.FC = () => {
   const { user } = useUser();
   const router = useRouter();
   const utils = trpc.useContext();
 
-  const { mutateAsync: createTweet } = trpc.tweet.createTweet.useMutation({
-    onSuccess: (data) => {
-      utils.tweet.all.invalidate();
-      router.replace("../");
+  const { mutateAsync: createTweet, isLoading: isCreating } =
+    trpc.tweet.createTweet.useMutation({
+      onSuccess: (data) => {
+        utils.tweet.all.invalidate();
+        router.replace("../");
 
-      router.push(`/(home)/tweet/${data.id}`);
-    },
-  });
+        router.push(`/(home)/tweet/${data.id}`);
+      },
+    });
 
   const [tweet, setTweet] = React.useState("");
 
@@ -35,16 +37,15 @@ const CreateTweet: React.FC = () => {
 
       <View className="flex-row items-center justify-between p-3">
         <GoBackButton showTitle title="Create Tweet" />
-
-        <Pressable
+        <LoadingButton
+          label="Tweet"
+          labelClassName="font-bold text-white"
+          isLoading={isCreating}
           onPress={handleTweet}
           className={`rounded-full bg-blue-500 px-3 py-2 ${
             isDisabledTweetButton && " opacity-50"
           }`}
-          disabled={isDisabledTweetButton}
-        >
-          <Text className="font-bold text-white">Tweet</Text>
-        </Pressable>
+        />
       </View>
 
       <View className="flex-row space-x-3 p-2">
