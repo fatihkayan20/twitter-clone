@@ -6,11 +6,18 @@ import notificationService from "../services/notificationService";
 import tweetService from "../services/tweetService";
 
 export const tweetRouter = router({
-  all: publicProcedure.query(async ({ ctx }) => {
-    const tweets = await tweetService.getAllTweets(ctx);
+  all: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().optional(),
+        cursor: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const tweets = await tweetService.getAllTweets(ctx, input);
 
-    return tweets;
-  }),
+      return tweets;
+    }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))

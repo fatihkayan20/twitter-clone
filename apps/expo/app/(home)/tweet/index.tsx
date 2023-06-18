@@ -1,17 +1,43 @@
 import * as React from "react";
-import { Text, View } from "react-native";
+import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
 import { trpc } from "../../../utils/trpc";
 import { TweetCard } from "../../../components/tweet/TweetCard";
 import { FlashList } from "@shopify/flash-list";
 import { CreateTweetButton } from "@/components/button/CreateTweetButton";
 
 export default function Page() {
-  const { isLoading, data: tweets } = trpc.tweet.all.useQuery();
+  const {
+    isLoading,
+    isFetching,
+    data: tweets,
+    refetch: refetchTweets,
+    fetchNextPage,
+    hasNextPage,
+  } = trpc.tweet.all.useInfiniteQuery(
+    {
+      limit: 15,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+
+  const allTweets = React.useMemo(() => {
+    return tweets?.pages.flatMap((page) => page.items);
+  }, [tweets]);
+
+  const handleLoadMore = React.useCallback(() => {
+    if (!hasNextPage) {
+      return;
+    }
+
+    fetchNextPage();
+  }, [hasNextPage, isLoading, isFetching, fetchNextPage]);
 
   if (isLoading) {
     return (
       <View className="flex-1 p-3">
-        <Text>Loading...</Text>
+        <ActivityIndicator animating={isLoading} />
       </View>
     );
   }
@@ -19,11 +45,16 @@ export default function Page() {
   return (
     <View className="flex-1">
       <FlashList
-        data={tweets}
+        data={allTweets}
         keyExtractor={(tweet) => tweet.id}
         renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
         estimatedItemSize={20}
         ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-500" />}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={refetchTweets} />
+        }
+        onEndReached={handleLoadMore}
+        ListFooterComponent={<ActivityIndicator animating={isFetching} />}
       />
 
       <CreateTweetButton />

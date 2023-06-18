@@ -1,11 +1,21 @@
 import { Context } from "../context";
 import { createUuid } from "../utils";
 
-const getAllTweets = async (ctx: Context) => {
+const getAllTweets = async (
+  ctx: Context,
+  input: {
+    limit?: number;
+    cursor?: string;
+  },
+) => {
+  const limit = input.limit ?? 10;
+
   const tweets = await ctx.prisma.tweet.findMany({
     where: {
       parent: null,
     },
+    cursor: input.cursor ? { id: input.cursor } : undefined,
+    take: limit + 1,
 
     include: {
       user: true,
@@ -27,7 +37,14 @@ const getAllTweets = async (ctx: Context) => {
     },
   });
 
-  return tweets.map((tweet) => {
+  let nextCursor = undefined;
+
+  if (tweets.length > limit) {
+    const nextItem = tweets.pop();
+    nextCursor = nextItem?.id;
+  }
+
+  const mappedTweets = tweets.map((tweet) => {
     const { likes, ...rest } = tweet;
 
     return {
@@ -35,6 +52,11 @@ const getAllTweets = async (ctx: Context) => {
       isLiked: likes.length > 0,
     };
   });
+
+  return {
+    items: mappedTweets,
+    nextCursor,
+  };
 };
 
 const getTweetDetail = async (ctx: Context, input: { id: string }) => {
