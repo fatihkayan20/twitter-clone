@@ -1,42 +1,85 @@
 import { MainTweet } from "@/components/tweet/MainTweet";
+import { RetweetBox } from "@/components/tweet/RetweetBox";
 import { TweetCard } from "@/components/tweet/TweetCard";
 import { trpc } from "@/utils/trpc";
 import { FlashList } from "@shopify/flash-list";
 import { useSearchParams } from "expo-router";
 import * as React from "react";
-import { View } from "react-native";
+import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
 
-interface TweetDetailScreenProps {}
-
-const TweetDetailScreen: React.FunctionComponent<
-  TweetDetailScreenProps
-> = () => {
+const TweetDetailScreen: React.FunctionComponent = () => {
   const { id } = useSearchParams();
 
-  const { data: tweetDetail, isLoading: isDetailLoading } =
-    trpc.tweet.getById.useQuery(
-      {
-        id: id as string,
-      },
-      {
-        enabled: !!id,
-      },
-    );
+  const {
+    data: tweetDetail,
+    isLoading: isDetailLoading,
+    refetch: refetchTweetDetail,
+  } = trpc.tweet.getById.useQuery(
+    {
+      id: id as string,
+    },
+    {
+      enabled: !!id,
+    },
+  );
 
-  if (isDetailLoading || !tweetDetail) {
-    return null;
+  const {
+    data: subTweetList,
+    isLoading: isSubTweetsLoading,
+    fetchNextPage: fetchMoreSubTweets,
+    refetch: refetchSubTweets,
+    isFetching: isMoreSubTweetsLoading,
+  } = trpc.tweet.getSubTweets.useInfiniteQuery(
+    {
+      limit: 15,
+      id: id as string,
+    },
+    {
+      enabled: !!id,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+
+  const refetchData = React.useCallback(() => {
+    refetchTweetDetail();
+    refetchSubTweets();
+  }, [refetchTweetDetail, refetchSubTweets]);
+
+  const subTweets = React.useMemo(() => {
+    return subTweetList?.pages?.flatMap((page) => page.items) ?? [];
+  }, [subTweetList]);
+
+  if (isDetailLoading || isSubTweetsLoading) {
+    return <ActivityIndicator animating={isDetailLoading} />;
   }
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 ">
       <FlashList
-        data={tweetDetail.subTweets}
+        data={subTweets}
+        ListEmptyComponent={
+          <View className=" flex-1 items-center justify-center ">
+            <Text className="text-black">No replies</Text>
+          </View>
+        }
         ListHeaderComponent={<MainTweet tweet={tweetDetail} />}
         keyExtractor={(tweet) => tweet.id}
         renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
-        estimatedItemSize={20}
+        estimatedItemSize={500}
         ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-500" />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isDetailLoading || isSubTweetsLoading}
+            onRefresh={refetchData}
+          />
+        }
+        onEndReached={fetchMoreSubTweets}
+        ListFooterComponent={
+          <ActivityIndicator animating={isMoreSubTweetsLoading} />
+        }
       />
+
+      <RetweetBox />
     </View>
   );
 };

@@ -28,7 +28,13 @@ export const tweetRouter = router({
     }),
 
   getSubTweets: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(
+      z.object({
+        id: z.string(),
+        limit: z.number().optional(),
+        cursor: z.string().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const subTweets = await tweetService.getSubTweets(ctx, input);
 
@@ -46,7 +52,7 @@ export const tweetRouter = router({
     }),
 
   createTweet: protectedProcedure
-    .input(z.object({ content: z.string() }))
+    .input(z.object({ content: z.string(), parentId: z.string().optional() }))
     .mutation(async ({ ctx, input }) => {
       const tweetResponse = await tweetService.createTweet(ctx, input);
 

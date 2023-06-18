@@ -119,13 +119,24 @@ const getTweetDetail = async (ctx: Context, input: { id: string }) => {
   };
 };
 
-const getSubTweets = async (ctx: Context, input: { id: string }) => {
+const getSubTweets = async (
+  ctx: Context,
+  input: {
+    id: string;
+    limit?: number;
+    cursor?: string;
+  },
+) => {
+  const limit = input.limit ?? 10;
+
   const subTweets = await ctx.prisma.tweet.findMany({
     where: {
       parent: {
         id: input.id,
       },
     },
+    cursor: input.cursor ? { id: input.cursor } : undefined,
+    take: limit + 1,
 
     include: {
       user: true,
@@ -147,7 +158,14 @@ const getSubTweets = async (ctx: Context, input: { id: string }) => {
     },
   });
 
-  return subTweets.map((tweet) => {
+  let nextCursor = undefined;
+
+  if (subTweets.length > limit) {
+    const nextItem = subTweets.pop();
+    nextCursor = nextItem?.id;
+  }
+
+  const mappedTweets = subTweets.map((tweet) => {
     const { likes, ...rest } = tweet;
 
     return {
@@ -155,9 +173,17 @@ const getSubTweets = async (ctx: Context, input: { id: string }) => {
       isLiked: likes.length > 0,
     };
   });
+
+  return {
+    items: mappedTweets,
+    nextCursor,
+  };
 };
 
-const createTweet = async (ctx: Context, input: { content: string }) => {
+const createTweet = async (
+  ctx: Context,
+  input: { content: string; parentId?: string },
+) => {
   const validId = createUuid();
 
   const tweet = await ctx.prisma.tweet.create({
@@ -169,6 +195,13 @@ const createTweet = async (ctx: Context, input: { content: string }) => {
           id: ctx.auth.userId ?? "",
         },
       },
+      ...(input.parentId && {
+        parent: {
+          connect: {
+            id: input.parentId ?? "",
+          },
+        },
+      }),
     },
   });
 

@@ -26,14 +26,6 @@ export default function Page() {
     return tweets?.pages.flatMap((page) => page.items);
   }, [tweets]);
 
-  const handleLoadMore = React.useCallback(() => {
-    if (!hasNextPage) {
-      return;
-    }
-
-    fetchNextPage();
-  }, [hasNextPage, isLoading, isFetching, fetchNextPage]);
-
   if (isLoading) {
     return (
       <View className="flex-1 p-3">
@@ -48,12 +40,12 @@ export default function Page() {
         data={allTweets}
         keyExtractor={(tweet) => tweet.id}
         renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
-        estimatedItemSize={20}
+        estimatedItemSize={500}
         ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-500" />}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refetchTweets} />
         }
-        onEndReached={handleLoadMore}
+        onEndReached={refetchTweets}
         ListFooterComponent={<ActivityIndicator animating={isFetching} />}
       />
 
