@@ -24,7 +24,7 @@ export default function Page() {
           <NotificationCard notification={notification} />
         )}
         estimatedItemSize={20}
-        ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-500" />}
+        ItemSeparatorComponent={() => <View className="h-[.2px] bg-gray-500" />}
       />
     </View>
   );

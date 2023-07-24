@@ -39,7 +39,7 @@ export const MainTweet: React.FC<MainTweetProps> = ({ tweet }) => {
         Views
       </Text>
 
-      <View className="-ml-3 mt-2 h-[1px] w-[200%] bg-gray-400" />
+      <View className="-ml-3 mt-2 h-[.2px] w-[200%] bg-gray-400" />
 
       <View className="mt-3 flex-row items-center">
         <Text className="text-gray-500">
@@ -54,13 +54,14 @@ export const MainTweet: React.FC<MainTweetProps> = ({ tweet }) => {
           Likes
         </Text>
       </View>
-      <View className="-ml-3 mt-2 h-[1px] w-[200%] bg-gray-400" />
+      <View className="-ml-3 mt-2 h-[.2px] w-[200%] bg-gray-400" />
 
       <TweetActions
         counts={tweet._count}
         isLiked={tweet.isLiked}
         tweetId={tweet.id}
         hideNumbers
+        content={tweet.content ?? ""}
       />
 
       <View className="my-2 -ml-3  h-[1px] w-[200%] bg-gray-400" />

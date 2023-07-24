@@ -8,11 +8,7 @@ import { StatusBar } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { ThemeProvider, DefaultTheme } from "@react-navigation/native";
 
-const unwantedRoutes = [
-  "(auth)/login",
-  "(auth)/register",
-  "(home)/user/[id]/index",
-];
+const unwantedRoutes = ["(auth)/login", "(auth)/register"];
 
 const theme = {
   ...DefaultTheme,

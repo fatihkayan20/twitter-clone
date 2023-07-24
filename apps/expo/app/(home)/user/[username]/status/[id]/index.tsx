@@ -89,7 +89,7 @@ const TweetDetailScreen: React.FunctionComponent = () => {
           renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
           estimatedItemSize={500}
           ItemSeparatorComponent={() => (
-            <View className="h-[1px] bg-gray-500" />
+            <View className="h-[.2px] bg-gray-500" />
           )}
           refreshControl={
             <RefreshControl

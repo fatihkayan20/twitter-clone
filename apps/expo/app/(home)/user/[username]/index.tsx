@@ -5,14 +5,19 @@ import { CreateTweetButton } from "@/components/button/CreateTweetButton";
 import { trpc } from "@/utils/trpc";
 import { TweetCard } from "@/components/tweet/TweetCard";
 import { useSearchParams } from "expo-router";
+import { UserProfileTop } from "@/components/userProfile/UserProfileTop";
 
 export default function Page() {
   const { username } = useSearchParams();
 
+  const { data: userData } = trpc.user.getByUsername.useQuery({
+    username: username as string,
+  });
+
   const {
     isLoading,
     isFetching,
-    data: tweets,
+    data: tweets = { pages: [] },
     refetch: refetchTweets,
     fetchNextPage,
   } = trpc.tweet.userTweets.useInfiniteQuery(
@@ -37,6 +42,14 @@ export default function Page() {
     );
   }
 
+  if (!userData) {
+    return (
+      <View className="flex-1 p-3">
+        <Text>User not found</Text>
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1">
       <FlashList
@@ -44,12 +57,13 @@ export default function Page() {
         keyExtractor={(tweet) => tweet.id}
         renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
         estimatedItemSize={500}
-        ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-500" />}
+        ItemSeparatorComponent={() => <View className="h-[.2px] bg-gray-500" />}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refetchTweets} />
         }
         onEndReached={fetchNextPage}
         ListFooterComponent={<ActivityIndicator animating={isFetching} />}
+        ListHeaderComponent={<UserProfileTop user={userData} />}
       />
 
       <CreateTweetButton />

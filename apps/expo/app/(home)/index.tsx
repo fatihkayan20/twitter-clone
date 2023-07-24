@@ -41,7 +41,7 @@ export default function Page() {
         keyExtractor={(tweet) => tweet.id}
         renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
         estimatedItemSize={500}
-        ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-500" />}
+        ItemSeparatorComponent={() => <View className="h-[.2px] bg-gray-500" />}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refetchTweets} />
         }
