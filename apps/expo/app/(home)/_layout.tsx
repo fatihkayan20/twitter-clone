@@ -1,7 +1,6 @@
-import { GoBackButton } from "@/components/comon/GoBackButton";
 import { Stack } from "expo-router";
 
-export default function TweetLayout() {
+export default function Layout() {
   return (
     <Stack>
       <Stack.Screen
@@ -10,18 +9,20 @@ export default function TweetLayout() {
           title: "Home",
         }}
       />
-
       <Stack.Screen
-        name="[id]/index"
+        name="user/[username]/status"
         options={{
-          title: "Thread",
-          headerBackTitleVisible: false,
-          headerLeft() {
-            return <GoBackButton />;
-          },
+          title: "Tweet",
+          headerShown: false,
         }}
       />
 
+      <Stack.Screen
+        name="user/[username]/index"
+        options={{
+          title: "Profile",
+        }}
+      />
       <Stack.Screen
         name="create/index"
         options={{

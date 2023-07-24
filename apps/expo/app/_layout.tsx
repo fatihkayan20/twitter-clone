@@ -8,7 +8,11 @@ import { StatusBar } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { ThemeProvider, DefaultTheme } from "@react-navigation/native";
 
-const unwantedRoutes = ["(auth)/login", "(auth)/register", "index"];
+const unwantedRoutes = [
+  "(auth)/login",
+  "(auth)/register",
+  "(home)/user/[id]/index",
+];
 
 const theme = {
   ...DefaultTheme,
@@ -30,7 +34,7 @@ export default function Layout() {
             <SafeAreaProvider>
               <Tabs>
                 <Tabs.Screen
-                  name="(home)/tweet"
+                  name="(home)"
                   options={{
                     title: "Home",
                     headerShown: false,

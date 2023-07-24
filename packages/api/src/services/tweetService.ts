@@ -1,5 +1,6 @@
 import { Context } from "../context";
 import { createUuid } from "../utils";
+import { getNextCursor } from "../utils/infiniteQuery";
 
 const getAllTweets = async (
   ctx: Context,
@@ -37,12 +38,64 @@ const getAllTweets = async (
     },
   });
 
-  let nextCursor = undefined;
+  const nextCursor = getNextCursor(tweets, limit);
 
-  if (tweets.length > limit) {
-    const nextItem = tweets.pop();
-    nextCursor = nextItem?.id;
-  }
+  const mappedTweets = tweets.map((tweet) => {
+    const { likes, ...rest } = tweet;
+
+    return {
+      ...rest,
+      isLiked: likes.length > 0,
+    };
+  });
+
+  return {
+    items: mappedTweets,
+    nextCursor,
+  };
+};
+
+const getUserTweets = async (
+  ctx: Context,
+  input: {
+    username: string;
+    limit?: number;
+    cursor?: string;
+  },
+) => {
+  const limit = input.limit ?? 10;
+
+  const tweets = await ctx.prisma.tweet.findMany({
+    where: {
+      parent: null,
+      user: {
+        username: input.username,
+      },
+    },
+    cursor: input.cursor ? { id: input.cursor } : undefined,
+    take: limit + 1,
+
+    include: {
+      user: true,
+      likes: {
+        where: {
+          userId: ctx.auth.userId,
+        },
+      },
+      _count: {
+        select: {
+          subTweets: true,
+          likes: true,
+        },
+      },
+    },
+
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const nextCursor = getNextCursor(tweets, limit);
 
   const mappedTweets = tweets.map((tweet) => {
     const { likes, ...rest } = tweet;
@@ -158,12 +211,7 @@ const getSubTweets = async (
     },
   });
 
-  let nextCursor = undefined;
-
-  if (subTweets.length > limit) {
-    const nextItem = subTweets.pop();
-    nextCursor = nextItem?.id;
-  }
+  const nextCursor = getNextCursor(subTweets, limit);
 
   const mappedTweets = subTweets.map((tweet) => {
     const { likes, ...rest } = tweet;
@@ -210,6 +258,7 @@ const createTweet = async (
 
 export default {
   getAllTweets,
+  getUserTweets,
   getTweetDetail,
   getSubTweets,
   createTweet,

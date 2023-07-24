@@ -1,20 +1,23 @@
 import * as React from "react";
 import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
-import { trpc } from "../../../utils/trpc";
-import { TweetCard } from "../../../components/tweet/TweetCard";
 import { FlashList } from "@shopify/flash-list";
 import { CreateTweetButton } from "@/components/button/CreateTweetButton";
+import { trpc } from "@/utils/trpc";
+import { TweetCard } from "@/components/tweet/TweetCard";
+import { useSearchParams } from "expo-router";
 
 export default function Page() {
+  const { username } = useSearchParams();
+
   const {
     isLoading,
     isFetching,
     data: tweets,
     refetch: refetchTweets,
     fetchNextPage,
-    hasNextPage,
-  } = trpc.tweet.all.useInfiniteQuery(
+  } = trpc.tweet.userTweets.useInfiniteQuery(
     {
+      username: username as string,
       limit: 15,
     },
     {
@@ -45,7 +48,7 @@ export default function Page() {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refetchTweets} />
         }
-        onEndReached={refetchTweets}
+        onEndReached={fetchNextPage}
         ListFooterComponent={<ActivityIndicator animating={isFetching} />}
       />
 

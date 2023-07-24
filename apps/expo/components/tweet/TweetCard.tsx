@@ -16,24 +16,33 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
   const router = useRouter();
 
   const handleNavigateToTweetDetail = React.useCallback(() => {
-    router.push(`/(home)/tweet/${tweet.id}`);
+    router.push(`/(home)/user/${tweet.user?.username}/status/${tweet.id}`);
   }, [tweet.id, router]);
+
+  const handleNavigateToUserProfile = React.useCallback(() => {
+    router.push(`/(home)/user/${tweet.user?.username}`);
+  }, [tweet.user?.username, router]);
 
   return (
     <Pressable
       onPress={handleNavigateToTweetDetail}
       className="flex flex-row space-x-2 py-2 px-2"
     >
-      <Avatar url={tweet.user?.profilePicture} />
+      <Pressable onPress={handleNavigateToUserProfile}>
+        <Avatar url={tweet.user?.profilePicture} />
+      </Pressable>
 
       <View className="flex-1">
-        <View className="flex flex-row space-x-1">
+        <Pressable
+          onPress={handleNavigateToUserProfile}
+          className="flex flex-row space-x-1"
+        >
           <Text className="font-bold">{tweet.user?.name}</Text>
           <Text className="text-xs text-gray-600">@{tweet.user?.username}</Text>
           <Text className="text-xs text-gray-600">
             •{formatDistanceToNow(tweet.createdAt)}
           </Text>
-        </View>
+        </Pressable>
 
         <Text className="mt-1.5 w-full flex-wrap text-sm">{tweet.content}</Text>
         <TweetActions

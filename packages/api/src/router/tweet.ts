@@ -19,6 +19,20 @@ export const tweetRouter = router({
       return tweets;
     }),
 
+  userTweets: publicProcedure
+    .input(
+      z.object({
+        username: z.string(),
+        limit: z.number().optional(),
+        cursor: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const tweets = await tweetService.getUserTweets(ctx, input);
+
+      return tweets;
+    }),
+
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {

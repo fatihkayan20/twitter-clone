@@ -7,7 +7,7 @@ export const CreateTweetButton: React.FC = () => {
   const router = useRouter();
 
   const handlePress = () => {
-    router.push("/(home)/tweet/create");
+    router.push("/(home)/create");
   };
 
   return (
