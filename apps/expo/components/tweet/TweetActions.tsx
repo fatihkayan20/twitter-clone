@@ -2,6 +2,7 @@ import { EvilIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { Pressable, Text, View } from "react-native";
 import { useLike } from "@/hooks/tweet/useLike";
+import { useShare } from "@/hooks/tweet/useShare";
 
 interface TweetActionsProps {
   isLiked: boolean;
@@ -11,6 +12,7 @@ interface TweetActionsProps {
     subTweets: number;
   };
   hideNumbers?: boolean;
+  content: string;
 }
 
 export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
@@ -18,12 +20,15 @@ export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
   counts,
   tweetId,
   hideNumbers,
+  content,
 }) => {
   const { handleLike, isLiked, likeCount } = useLike({
     tweetId,
     isLiked: initialIsLiked,
     likeCount: counts.likes,
   });
+
+  const { handleShareTweet } = useShare(content);
 
   return (
     <View
@@ -63,7 +68,7 @@ export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
         {!hideNumbers && <Text className="text-xs text-gray-500">{0}</Text>}
       </Pressable>
 
-      <Pressable className="flex-row gap-1">
+      <Pressable className="flex-row gap-1" onPress={handleShareTweet}>
         <EvilIcons name="share-apple" size={20} color="gray" />
       </Pressable>
     </View>

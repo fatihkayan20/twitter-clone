@@ -43,6 +43,7 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
             likes: tweet._count.likes,
             subTweets: tweet._count.subTweets,
           }}
+          content={tweet.content ?? ""}
         />
       </View>
     </Pressable>
