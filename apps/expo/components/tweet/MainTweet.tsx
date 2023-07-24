@@ -12,11 +12,11 @@ interface MainTweetProps {
 
 export const MainTweet: React.FC<MainTweetProps> = ({ tweet }) => {
   return (
-    <View className="p-1">
+    <View className="p-2">
       <View className="flex-row items-center">
         <Avatar url={tweet?.user?.profilePicture} />
 
-        <View className=" ml-2 flex-1 ">
+        <View className=" ml-3 flex-1 ">
           <Text className="text-base font-bold">{tweet?.user?.name}</Text>
           <Text className="text-gray-500">@{tweet?.user?.username}</Text>
         </View>

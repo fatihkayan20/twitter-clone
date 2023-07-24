@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  KeyboardAvoidingView,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { TextInput, View } from "react-native";
 import { Avatar } from "./Avatar";
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter, useSearchParams } from "expo-router";
@@ -53,7 +47,7 @@ export const RetweetBox: React.FC<RetweetBoxProps> = () => {
           isFocused ? "" : "h-14"
         }`}
       >
-        <View className="flex-row space-x-2 px-2">
+        <View className="flex-row space-x-2 px-3">
           <Avatar url={user?.profileImageUrl} size={30} />
           <TextInput
             className="flex-1  rounded-3xl border border-gray-400 p-2"

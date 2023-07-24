@@ -5,7 +5,16 @@ import { trpc } from "@/utils/trpc";
 import { FlashList } from "@shopify/flash-list";
 import { useSearchParams } from "expo-router";
 import * as React from "react";
-import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  RefreshControl,
+  Text,
+  View,
+} from "react-native";
+
+const keyboardVerticalOffset = Platform.OS === "ios" ? 100 : 0;
 
 const TweetDetailScreen: React.FunctionComponent = () => {
   const { id } = useSearchParams();
@@ -53,34 +62,50 @@ const TweetDetailScreen: React.FunctionComponent = () => {
     return <ActivityIndicator animating={isDetailLoading} />;
   }
 
-  return (
-    <View className="flex-1 ">
-      <FlashList
-        data={subTweets}
-        ListEmptyComponent={
-          <View className=" flex-1 items-center justify-center ">
-            <Text className="text-black">No replies</Text>
-          </View>
-        }
-        ListHeaderComponent={<MainTweet tweet={tweetDetail} />}
-        keyExtractor={(tweet) => tweet.id}
-        renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
-        estimatedItemSize={500}
-        ItemSeparatorComponent={() => <View className="h-[1px] bg-gray-500" />}
-        refreshControl={
-          <RefreshControl
-            refreshing={isDetailLoading || isSubTweetsLoading}
-            onRefresh={refetchData}
-          />
-        }
-        onEndReached={fetchMoreSubTweets}
-        ListFooterComponent={
-          <ActivityIndicator animating={isMoreSubTweetsLoading} />
-        }
-      />
+  if (!tweetDetail) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text className="text-black">Tweet not found</Text>
+      </View>
+    );
+  }
 
-      <RetweetBox />
-    </View>
+  return (
+    <KeyboardAvoidingView
+      className="flex-1"
+      behavior="padding"
+      keyboardVerticalOffset={keyboardVerticalOffset}
+    >
+      <View className="flex-1 ">
+        <FlashList
+          data={subTweets}
+          ListEmptyComponent={
+            <View className=" flex-1 items-center justify-center ">
+              <Text className="text-black">No replies</Text>
+            </View>
+          }
+          ListHeaderComponent={<MainTweet tweet={tweetDetail} />}
+          keyExtractor={(tweet) => tweet.id}
+          renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
+          estimatedItemSize={500}
+          ItemSeparatorComponent={() => (
+            <View className="h-[1px] bg-gray-500" />
+          )}
+          refreshControl={
+            <RefreshControl
+              refreshing={isDetailLoading || isSubTweetsLoading}
+              onRefresh={refetchData}
+            />
+          }
+          onEndReached={fetchMoreSubTweets}
+          ListFooterComponent={
+            <ActivityIndicator animating={isMoreSubTweetsLoading} />
+          }
+        />
+
+        <RetweetBox />
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
