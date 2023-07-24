@@ -1,14 +1,26 @@
 import * as React from "react";
-import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { CreateTweetButton } from "@/components/button/CreateTweetButton";
 import { trpc } from "@/utils/trpc";
 import { TweetCard } from "@/components/tweet/TweetCard";
 import { useSearchParams } from "expo-router";
 import { UserProfileTop } from "@/components/userProfile/UserProfileTop";
+import { useScroll } from "@/hooks/userProfile/useScroll";
+import Animated from "react-native-reanimated";
+import { UserProfileCustomHeader } from "@/components/userProfile/UserProfileCustomHeader";
+
+const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
 export default function Page() {
   const { username } = useSearchParams();
+  const { scrollY, handleScroll } = useScroll();
 
   const { data: userData } = trpc.user.getByUsername.useQuery({
     username: username as string,
@@ -51,11 +63,18 @@ export default function Page() {
   }
 
   return (
-    <View className="flex-1">
-      <FlashList
-        data={allTweets}
-        keyExtractor={(tweet) => tweet.id}
-        renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
+    <SafeAreaView className="flex-1">
+      <UserProfileCustomHeader
+        scrollY={scrollY}
+        name={userData.name ?? ""}
+        tweetCount={userData._count.tweets}
+      />
+      <AnimatedFlashList
+        data={allTweets ?? []}
+        keyExtractor={(tweet) => (tweet as (typeof allTweets)[number]).id}
+        renderItem={({ item: tweet }) => (
+          <TweetCard tweet={tweet as (typeof allTweets)[number]} />
+        )}
         estimatedItemSize={500}
         ItemSeparatorComponent={() => <View className="h-[.2px] bg-gray-500" />}
         refreshControl={
@@ -63,10 +82,13 @@ export default function Page() {
         }
         onEndReached={fetchNextPage}
         ListFooterComponent={<ActivityIndicator animating={isFetching} />}
-        ListHeaderComponent={<UserProfileTop user={userData} />}
+        ListHeaderComponent={
+          <UserProfileTop user={userData} scrollY={scrollY} />
+        }
+        onScroll={handleScroll}
       />
 
       <CreateTweetButton />
-    </View>
+    </SafeAreaView>
   );
 }

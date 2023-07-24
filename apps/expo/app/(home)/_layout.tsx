@@ -21,6 +21,7 @@ export default function Layout() {
         name="user/[username]/index"
         options={{
           title: "Profile",
+          headerShown: false,
         }}
       />
       <Stack.Screen

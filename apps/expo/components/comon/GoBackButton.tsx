@@ -7,12 +7,14 @@ interface GoBackButtonProps {
   showTitle?: boolean;
   title?: string;
   hideIcon?: boolean;
+  color?: string;
 }
 
 export const GoBackButton: React.FunctionComponent<GoBackButtonProps> = ({
   showTitle = false,
   title = "Back",
   hideIcon = false,
+  color = "black",
 }) => {
   const router = useRouter();
 
@@ -22,7 +24,7 @@ export const GoBackButton: React.FunctionComponent<GoBackButtonProps> = ({
 
   return (
     <Pressable onPress={handleGoBack} className="flex-row items-center">
-      {!hideIcon && <Ionicons name="chevron-back" size={24} color="black" />}
+      {!hideIcon && <Ionicons name="chevron-back" size={24} color={color} />}
 
       {showTitle && <Text className="text-lg font-bold">{title}</Text>}
     </Pressable>
