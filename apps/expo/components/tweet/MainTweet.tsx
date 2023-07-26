@@ -1,25 +1,37 @@
 import * as React from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { Avatar } from "./Avatar";
 import { RouterOutput } from "@/../../packages/api";
 import { format } from "date-fns";
 import { TweetActions } from "./TweetActions";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 interface MainTweetProps {
   tweet: RouterOutput["tweet"]["getById"];
 }
 
 export const MainTweet: React.FC<MainTweetProps> = ({ tweet }) => {
+  const router = useRouter();
+
+  const handleNavigateToUserProfile = React.useCallback(() => {
+    router.push(`/(home)/user/${tweet.user?.username}`);
+  }, [tweet.user?.username, router]);
+
   return (
     <View className="p-2">
       <View className="flex-row items-center">
-        <Avatar url={tweet?.user?.profilePicture} />
+        <Pressable onPress={handleNavigateToUserProfile}>
+          <Avatar url={tweet.user?.profilePicture} />
+        </Pressable>
 
-        <View className=" ml-3 flex-1 ">
+        <Pressable
+          className=" flex-1 pl-3 "
+          onPress={handleNavigateToUserProfile}
+        >
           <Text className="text-base font-bold">{tweet?.user?.name}</Text>
           <Text className="text-gray-500">@{tweet?.user?.username}</Text>
-        </View>
+        </Pressable>
 
         <Ionicons
           name="ellipsis-horizontal"

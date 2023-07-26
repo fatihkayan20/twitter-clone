@@ -7,7 +7,7 @@ const defineConfig = (): ExpoConfig => ({
   name: "expo",
   slug: "expo",
   version: "1.0.0",
-  scheme: "expo",
+  scheme: "com.twity.app",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "light",
