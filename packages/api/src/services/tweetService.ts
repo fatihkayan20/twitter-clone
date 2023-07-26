@@ -251,9 +251,30 @@ const createTweet = async (
         },
       }),
     },
+    include: {
+      user: true,
+      parent: {
+        include: {
+          user: {
+            select: {
+              username: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
   });
 
-  return tweet;
+  const { parent, ...rest } = tweet;
+
+  return {
+    ...rest,
+    users: {
+      commentedBy: ctx.auth.userId as string,
+      author: parent?.userId,
+    },
+  };
 };
 
 export default {

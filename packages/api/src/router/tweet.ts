@@ -70,6 +70,8 @@ export const tweetRouter = router({
     .mutation(async ({ ctx, input }) => {
       const tweetResponse = await tweetService.createTweet(ctx, input);
 
+      await notificationService.createTweetNotification(ctx, tweetResponse);
+
       return tweetResponse;
     }),
 });

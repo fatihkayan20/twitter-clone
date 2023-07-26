@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { GoBackButton } from "@/components/comon/GoBackButton";
 import { useUser } from "@clerk/clerk-expo";
@@ -19,7 +19,7 @@ const CreateTweet: React.FC = () => {
         utils.tweet.all.invalidate();
         router.replace("../");
 
-        router.push(`/(home)/tweet/${data.id}`);
+        router.push(`/(home)/user/${data.user?.username}/status/${data.id}`);
       },
     });
 
