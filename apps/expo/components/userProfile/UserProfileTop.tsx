@@ -5,7 +5,6 @@ import { EvilIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import Animated, { SharedValue } from "react-native-reanimated";
 import { UserProfileAvatar } from "./UserProfileAvatar";
-import { UserProfileCustomHeader } from "./UserProfileCustomHeader";
 
 interface UserProfileTopProps {
   user: RouterOutput["user"]["getByUsername"];

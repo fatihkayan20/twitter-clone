@@ -11,15 +11,20 @@ const getByUsername = async (
       username: input.username,
     },
     include: {
-      _count: {
-        select: {
-          tweets: true,
+      tweets: {
+        where: {
+          parent: null,
         },
       },
     },
   });
 
-  return user;
+  const { tweets, ...rest } = user;
+
+  return {
+    ...rest,
+    tweetCount: tweets.length,
+  };
 };
 
 export default {

@@ -62,12 +62,14 @@ export default function Page() {
     );
   }
 
+  console.log(userData);
+
   return (
     <SafeAreaView className="flex-1">
       <UserProfileCustomHeader
         scrollY={scrollY}
         name={userData.name ?? ""}
-        tweetCount={userData._count.tweets}
+        tweetCount={userData.tweetCount}
       />
       <AnimatedFlashList
         data={allTweets ?? []}
