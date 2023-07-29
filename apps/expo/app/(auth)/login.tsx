@@ -88,7 +88,7 @@ export default function Page() {
         onPress={handleLogin}
         className="items-center rounded-md bg-blue-500 p-3 text-white"
       >
-        <Text className="text-white">Create account</Text>
+        <Text className="text-white">Login</Text>
       </Pressable>
 
       {state.error && (

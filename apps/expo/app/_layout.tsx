@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import { tokenCache } from "../utils/cache";
 import { TRPCProvider } from "../utils/trpc";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StatusBar } from "react-native";
+import { Platform, StatusBar, Text } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { ThemeProvider, DefaultTheme } from "@react-navigation/native";
 
@@ -24,16 +24,21 @@ export default function Layout() {
       publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}
       tokenCache={tokenCache}
     >
-      <TRPCProvider>
-        <ThemeProvider value={theme}>
-          <SignedIn>
-            <SafeAreaProvider>
-              <Tabs>
+      <StatusBar />
+      <SafeAreaProvider>
+        <TRPCProvider>
+          <ThemeProvider value={theme}>
+            <SignedIn>
+              <Tabs
+                screenOptions={{
+                  headerShown: false,
+                  tabBarShowLabel: false,
+                }}
+              >
                 <Tabs.Screen
                   name="(home)"
                   options={{
                     title: "Home",
-                    headerShown: false,
                     tabBarIcon: ({ focused }) => (
                       <AntDesign
                         name="home"
@@ -41,7 +46,6 @@ export default function Layout() {
                         size={24}
                       />
                     ),
-                    tabBarShowLabel: false,
                   }}
                 />
 
@@ -49,7 +53,6 @@ export default function Layout() {
                   name="notification"
                   options={{
                     title: "Notifications",
-                    headerShown: false,
                     tabBarIcon: ({ focused }) => (
                       <Ionicons
                         name="notifications-outline"
@@ -57,7 +60,6 @@ export default function Layout() {
                         size={24}
                       />
                     ),
-                    tabBarShowLabel: false,
                   }}
                 />
 
@@ -71,12 +73,14 @@ export default function Layout() {
                   />
                 ))}
               </Tabs>
-              <StatusBar />
-            </SafeAreaProvider>
-          </SignedIn>
-          <SignedOut>
-            <SafeAreaProvider>
-              <Stack>
+            </SignedIn>
+            <SignedOut>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+                initialRouteName="(auth)/login"
+              >
                 <Stack.Screen
                   name="(auth)/login"
                   options={{
@@ -90,10 +94,10 @@ export default function Layout() {
                   }}
                 />
               </Stack>
-            </SafeAreaProvider>
-          </SignedOut>
-        </ThemeProvider>
-      </TRPCProvider>
+            </SignedOut>
+          </ThemeProvider>
+        </TRPCProvider>
+      </SafeAreaProvider>
     </ClerkProvider>
   );
 }

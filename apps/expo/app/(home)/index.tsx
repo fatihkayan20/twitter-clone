@@ -5,8 +5,12 @@ import { FlashList } from "@shopify/flash-list";
 import { CreateTweetButton } from "@/components/button/CreateTweetButton";
 import { trpc } from "@/utils/trpc";
 import { TweetCard } from "@/components/tweet/TweetCard";
+import { useAuth } from "@clerk/clerk-expo";
+import { Redirect } from "expo-router";
 
 export default function Page() {
+  const { isLoaded, isSignedIn } = useAuth();
+
   const {
     isLoading,
     isFetching,
@@ -25,6 +29,10 @@ export default function Page() {
   const allTweets = React.useMemo(() => {
     return tweets?.pages.flatMap((page) => page.items);
   }, [tweets]);
+
+  if (isLoaded && !isSignedIn) {
+    return <Redirect href="/(auth)/login" />;
+  }
 
   if (isLoading) {
     return (
