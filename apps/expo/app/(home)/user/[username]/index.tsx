@@ -22,9 +22,10 @@ export default function Page() {
   const { username } = useSearchParams();
   const { scrollY, handleScroll } = useScroll();
 
-  const { data: userData } = trpc.user.getByUsername.useQuery({
-    username: username as string,
-  });
+  const { data: userData, refetch: refetchUserData } =
+    trpc.user.getByUsername.useQuery({
+      username: username as string,
+    });
 
   const {
     isLoading,
@@ -62,7 +63,10 @@ export default function Page() {
     );
   }
 
-  console.log(userData);
+  const handleRefresh = () => {
+    refetchUserData();
+    refetchTweets();
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -80,7 +84,7 @@ export default function Page() {
         estimatedItemSize={500}
         ItemSeparatorComponent={() => <View className="h-[.2px] bg-gray-500" />}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={refetchTweets} />
+          <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
         }
         onEndReached={fetchNextPage}
         ListFooterComponent={<ActivityIndicator animating={isFetching} />}

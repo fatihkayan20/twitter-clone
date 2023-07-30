@@ -96,6 +96,9 @@ const getMyNotifications = async (ctx: Context) => {
       sender: true,
       receiver: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
 

@@ -73,7 +73,7 @@ const TweetDetailScreen: React.FunctionComponent = () => {
   return (
     <KeyboardAvoidingView
       className="flex-1"
-      behavior="padding"
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={keyboardVerticalOffset}
     >
       <View className="flex-1 ">

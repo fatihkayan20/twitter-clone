@@ -13,6 +13,15 @@ const getAllTweets = async (ctx: Context, input: IGetAllTweetsInputs) => {
   const tweets = await ctx.prisma.tweet.findMany({
     where: {
       parent: null,
+      ...(input.isFollowingOnly && {
+        user: {
+          followers: {
+            some: {
+              followingId: ctx.auth.userId,
+            },
+          },
+        },
+      }),
     },
     cursor: input.cursor ? { id: input.cursor } : undefined,
     take: limit + 1,

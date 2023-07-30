@@ -1,63 +1,80 @@
 import * as React from "react";
-import { ActivityIndicator, RefreshControl, View } from "react-native";
 
-import { FlashList } from "@shopify/flash-list";
-import { CreateTweetButton } from "@/components/button/CreateTweetButton";
+import { useProtect } from "@/hooks/comon/useProtect";
+import { TabView } from "react-native-tab-view";
+import { TweetList } from "@/components/views/home/TweetList";
+import { ITab } from "@/types/ITab";
 import { trpc } from "@/utils/trpc";
-import { TweetCard } from "@/components/tweet/TweetCard";
-import { useAuth } from "@clerk/clerk-expo";
-import { Redirect } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 
 export default function Page() {
-  const { isLoaded, isSignedIn } = useAuth();
+  useProtect();
 
-  const {
-    isLoading,
-    isFetching,
-    data: tweets,
-    refetch: refetchTweets,
-    fetchNextPage,
-  } = trpc.tweet.all.useInfiniteQuery(
-    {
-      limit: 15,
+  const utils = trpc.useContext();
+
+  const [navigationState, setNavigationState] = React.useState({
+    index: 0,
+    routes: [
+      { key: ITab.ForYou, title: "For you" },
+      { key: ITab.Following, title: "Following" },
+    ],
+  });
+
+  const handleIndexChange = (index: number) => {
+    setNavigationState((prev) => ({ ...prev, index }));
+    utils.tweet.all.invalidate();
+  };
+
+  const renderTabBar = React.useCallback(
+    (props: {
+      navigationState: {
+        routes: {
+          title: string;
+          key: string;
+        }[];
+        index: number;
+      };
+    }) => {
+      return (
+        <View className="flex-row">
+          {props.navigationState.routes.map((route, i) => {
+            const focused = props.navigationState.index === i;
+
+            return (
+              <Pressable
+                key={i}
+                className="flex-1 items-center p-4"
+                onPress={() => handleIndexChange(i)}
+              >
+                <View
+                  className={`${
+                    focused ? "border-b border-black " : ""
+                  } py-2 px-4`}
+                >
+                  <Text
+                    className={`${focused ? " text-black" : "text-black/50"}`}
+                  >
+                    {route.title}
+                  </Text>
+                </View>
+              </Pressable>
+            );
+          })}
+        </View>
+      );
     },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
+    [],
   );
 
-  const allTweets = React.useMemo(() => {
-    return tweets?.pages.flatMap((page) => page.items);
-  }, [tweets]);
-
-  if (isLoaded && !isSignedIn) {
-    return <Redirect href="/(auth)/login" />;
-  }
-
-  if (isLoading) {
-    return (
-      <View className="flex-1 p-3">
-        <ActivityIndicator animating={isLoading} />
-      </View>
-    );
-  }
-
   return (
-    <View className="flex-1">
-      <FlashList
-        data={allTweets}
-        keyExtractor={(tweet) => tweet.id}
-        renderItem={({ item: tweet }) => <TweetCard tweet={tweet} />}
-        estimatedItemSize={500}
-        ItemSeparatorComponent={() => <View className="h-[.2px] bg-gray-500" />}
-        refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={refetchTweets} />
-        }
-        onEndReached={fetchNextPage}
-        ListFooterComponent={<ActivityIndicator animating={isFetching} />}
-      />
-
-      <CreateTweetButton />
-    </View>
+    <TabView
+      navigationState={navigationState}
+      renderScene={({ route }) => {
+        return <TweetList tab={route.key} />;
+      }}
+      onIndexChange={handleIndexChange}
+      initialLayout={{ width: 100 }}
+      renderTabBar={renderTabBar}
+    />
   );
 }
