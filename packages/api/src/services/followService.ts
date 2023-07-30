@@ -1,8 +1,8 @@
 import { Context } from "../context";
 import { createUuid } from "../utils";
-import { CreateFollowValidatorType } from "../validators/follow/createFollowValidator";
+import { IToggleFollowInputs } from "../validators/follow/toggleFollowValidator";
 
-const toggleFollow = async (ctx: Context, input: CreateFollowValidatorType) => {
+const toggleFollow = async (ctx: Context, input: IToggleFollowInputs) => {
   const validId = createUuid();
 
   const isAlreadyFollowing = await ctx.prisma.follow.findFirst({

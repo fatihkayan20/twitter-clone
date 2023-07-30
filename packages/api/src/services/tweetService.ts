@@ -1,14 +1,13 @@
 import { Context } from "../context";
 import { createUuid } from "../utils";
 import { getNextCursor } from "../utils/infiniteQuery";
+import { ICreateTweetInputs } from "../validators/tweet/createTweetValidator";
+import { IGetAllTweetsInputs } from "../validators/tweet/getAllTweetsValidator";
+import { IGetByIdInputs } from "../validators/tweet/getByIdValidator";
+import { IGetSubTweetsInputs } from "../validators/tweet/getSubTweetsValidator";
+import { IUserTweetsInputs } from "../validators/tweet/userTweetsValidator";
 
-const getAllTweets = async (
-  ctx: Context,
-  input: {
-    limit?: number;
-    cursor?: string;
-  },
-) => {
+const getAllTweets = async (ctx: Context, input: IGetAllTweetsInputs) => {
   const limit = input.limit ?? 10;
 
   const tweets = await ctx.prisma.tweet.findMany({
@@ -55,14 +54,7 @@ const getAllTweets = async (
   };
 };
 
-const getUserTweets = async (
-  ctx: Context,
-  input: {
-    username: string;
-    limit?: number;
-    cursor?: string;
-  },
-) => {
+const getUserTweets = async (ctx: Context, input: IUserTweetsInputs) => {
   const limit = input.limit ?? 10;
 
   const tweets = await ctx.prisma.tweet.findMany({
@@ -112,7 +104,7 @@ const getUserTweets = async (
   };
 };
 
-const getTweetDetail = async (ctx: Context, input: { id: string }) => {
+const getTweetDetail = async (ctx: Context, input: IGetByIdInputs) => {
   const tweetDetail = await ctx.prisma.tweet.findUnique({
     where: {
       id: input.id,
@@ -172,14 +164,7 @@ const getTweetDetail = async (ctx: Context, input: { id: string }) => {
   };
 };
 
-const getSubTweets = async (
-  ctx: Context,
-  input: {
-    id: string;
-    limit?: number;
-    cursor?: string;
-  },
-) => {
+const getSubTweets = async (ctx: Context, input: IGetSubTweetsInputs) => {
   const limit = input.limit ?? 10;
 
   const subTweets = await ctx.prisma.tweet.findMany({
@@ -228,10 +213,7 @@ const getSubTweets = async (
   };
 };
 
-const createTweet = async (
-  ctx: Context,
-  input: { content: string; parentId?: string },
-) => {
+const createTweet = async (ctx: Context, input: ICreateTweetInputs) => {
   const validId = createUuid();
 
   const tweet = await ctx.prisma.tweet.create({

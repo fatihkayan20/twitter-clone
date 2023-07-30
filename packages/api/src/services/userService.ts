@@ -1,11 +1,7 @@
 import { Context } from "../context";
+import { IGetByUsernameInputs } from "../validators/user/getByUsernameValidator";
 
-const getByUsername = async (
-  ctx: Context,
-  input: {
-    username: string;
-  },
-) => {
+const getByUsername = async (ctx: Context, input: IGetByUsernameInputs) => {
   const user = await ctx.prisma.user.findFirstOrThrow({
     where: {
       username: input.username,

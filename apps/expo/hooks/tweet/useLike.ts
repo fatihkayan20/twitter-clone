@@ -12,8 +12,8 @@ export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
   const utils = trpc.useContext();
   const firstLikeStatus = React.useRef(isLiked);
 
-  const { mutateAsync: likeTweet, isLoading } =
-    trpc.tweet.likeTweet.useMutation();
+  const { mutateAsync: toggleLikeMutation, isLoading } =
+    trpc.tweet.toggleLike.useMutation();
 
   const [state, setState] = React.useState({
     isLiked: isLiked,
@@ -21,7 +21,7 @@ export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
   });
 
   const debounced = useDebounce(
-    likeTweet,
+    toggleLikeMutation,
     500,
     firstLikeStatus.current !== state.isLiked,
   );
@@ -36,7 +36,7 @@ export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
     firstLikeStatus.current = isLiked;
   }, [isLiked, likeCount]);
 
-  const handleLike = async () => {
+  const toggleLike = async () => {
     setState((prev) => ({
       ...prev,
       isLiked: !prev.isLiked,
@@ -50,7 +50,7 @@ export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
   };
 
   return {
-    handleLike,
+    toggleLike,
     isLiked: state.isLiked,
     likeCount: state.likeCount,
     isLoading,

@@ -1,8 +1,11 @@
 import { Context } from "../context";
 import { createUuid } from "../utils";
+import { IToggleLikeInputs } from "../validators/tweet/toggleLikeValidator";
 import { prisma } from "./../../../db/index";
 
-const likeTweet = async (ctx: Context, tweetId: string) => {
+const toggleLike = async (ctx: Context, input: IToggleLikeInputs) => {
+  const { tweetId } = input;
+
   const post = await prisma.tweet.findUnique({
     where: {
       id: tweetId,
@@ -72,5 +75,5 @@ const likeTweet = async (ctx: Context, tweetId: string) => {
 };
 
 export default {
-  likeTweet,
+  toggleLike,
 };

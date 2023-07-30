@@ -22,7 +22,7 @@ export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
   hideNumbers,
   content,
 }) => {
-  const { handleLike, isLiked, likeCount } = useLike({
+  const { toggleLike, isLiked, likeCount } = useLike({
     tweetId,
     isLiked: initialIsLiked,
     likeCount: counts.likes,
@@ -50,7 +50,7 @@ export const TweetActions: React.FunctionComponent<TweetActionsProps> = ({
         {!hideNumbers && <Text className="text-xs text-gray-500">{0}</Text>}
       </Pressable>
 
-      <Pressable className="flex-row gap-1" onPress={handleLike}>
+      <Pressable className="flex-row gap-1" onPress={toggleLike}>
         <EvilIcons name="heart" size={20} color={isLiked ? "red" : "gray"} />
 
         {!hideNumbers && (
