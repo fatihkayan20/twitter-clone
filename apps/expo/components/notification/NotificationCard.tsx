@@ -17,15 +17,23 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
 
   const handleNavigateDetail = () => {
     router.push(
-      `/(home)/user/${notification.receiver?.username}/status/${notification.tweetId}`,
+      `/(home)/user/${notification.receiver?.username}${
+        notification.tweetId ? `/status/${notification.tweetId}` : ""
+      }`,
     );
   };
 
+  const handleNavigateToUserProfile = () => {
+    router.push(`/(home)/user/${notification.receiver?.username}`);
+  };
+
   return (
-    <Pressable className="flex-row" onPress={handleNavigateDetail}>
+    <Pressable className="flex-row py-3" onPress={handleNavigateDetail}>
       <NotificationTypeIcon notificationType={notification.type} />
       <View className="ml-2">
-        <Avatar url={notification.sender?.profilePicture} />
+        <Pressable onPress={handleNavigateToUserProfile}>
+          <Avatar url={notification.sender?.profilePicture} />
+        </Pressable>
         <Text className="my-1">
           <Text className="font-bold">{notification.sender?.name} </Text>
           {getNotificationText(notification)}
