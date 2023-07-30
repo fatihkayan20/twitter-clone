@@ -25,8 +25,8 @@ model User {
     activities   Notification[] @relation(name: "sender")
     notification Notification[] @relation(name: "receiver")
 
-    followers Follow[] @relation(name: "follower")
-    following Follow[] @relation(name: "following")
+    followers  Follow[] @relation(name: "follower")
+    followings Follow[] @relation(name: "following")
 }
 
 model Follow {
@@ -96,4 +96,5 @@ model Notification {
 enum NotificationType {
     LIKE
     COMMENT
+    FOLLOW
 }

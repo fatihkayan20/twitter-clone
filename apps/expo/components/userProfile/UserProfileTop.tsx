@@ -1,10 +1,11 @@
 import { RouterOutput } from "@acme/api";
 import * as React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import Animated, { SharedValue } from "react-native-reanimated";
 import { UserProfileAvatar } from "./UserProfileAvatar";
+import { FollowButton } from "./FollowButton";
 
 interface UserProfileTopProps {
   user: RouterOutput["user"]["getByUsername"];
@@ -21,11 +22,7 @@ export const UserProfileTop: React.FC<UserProfileTopProps> = ({
         <Animated.View>
           <UserProfileAvatar url={user.profilePicture} scrollY={scrollY} />
         </Animated.View>
-        <Pressable className="rounded-full border bg-black  px-6 py-1 dark:bg-white">
-          <Text className="text-md font-bold text-white dark:text-black">
-            Follow
-          </Text>
-        </Pressable>
+        <FollowButton user={user} />
       </View>
 
       <View>

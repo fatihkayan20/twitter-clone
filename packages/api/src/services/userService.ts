@@ -15,15 +15,24 @@ const getByUsername = async (
         where: {
           parent: null,
         },
+        select: {
+          id: true,
+        },
+      },
+      followings: {
+        select: {
+          id: true,
+        },
       },
     },
   });
 
-  const { tweets, ...rest } = user;
+  const { tweets, followings, ...rest } = user;
 
   return {
     ...rest,
     tweetCount: tweets.length,
+    isFollowed: followings.length > 0,
   };
 };
 

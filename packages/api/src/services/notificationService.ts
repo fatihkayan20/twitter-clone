@@ -5,20 +5,30 @@ import { createUuid } from "../utils";
 type ILikeNotificationProps = {
   type: "LIKE";
   isLiked: boolean;
+  isSubTweet: boolean;
 };
 
 type ICommentNotificationProps = {
   type: "COMMENT";
+  isSubTweet: boolean;
+};
+
+type IFollowNotificationProps = {
+  type: "FOLLOW";
+  isFollowing: boolean;
 };
 
 type ICreateOrDeleteNotification = {
-  tweetId: string;
-  isSubTweet: boolean;
+  tweetId?: string;
   users: {
     sender: string;
     receiver: string;
   };
-} & (ILikeNotificationProps | ICommentNotificationProps);
+} & (
+  | ILikeNotificationProps
+  | ICommentNotificationProps
+  | IFollowNotificationProps
+);
 
 const createOrDeleteNotification = async (
   ctx: Context,
@@ -28,7 +38,9 @@ const createOrDeleteNotification = async (
     return;
   }
 
-  const shouldDelete = data.type === NotificationType.LIKE && !data.isLiked;
+  const shouldDelete =
+    (data.type === NotificationType.LIKE && !data.isLiked) ||
+    (data.type === NotificationType.FOLLOW && !data.isFollowing);
   const shouldPass = data.type === NotificationType.COMMENT && !data.isSubTweet;
 
   if (shouldPass) {
@@ -52,12 +64,14 @@ const createOrDeleteNotification = async (
     data: {
       id: validId,
       type: data.type,
-      isSubTweet: data.isSubTweet,
-      tweet: {
-        connect: {
-          id: data.tweetId,
+      ...(data.tweetId && {
+        tweet: {
+          connect: {
+            id: data.tweetId,
+          },
         },
-      },
+      }),
+      isSubTweet: data.type == NotificationType.LIKE ? data.isSubTweet : false,
       receiver: {
         connect: {
           id: data.users.receiver,

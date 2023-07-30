@@ -2,10 +2,7 @@ import { Context } from "../context";
 import { createUuid } from "../utils";
 import { prisma } from "./../../../db/index";
 
-const likeTweet = async (
-  ctx: Context,
-  tweetId: string,
-): Promise<ILikeATweetResponse> => {
+const likeTweet = async (ctx: Context, tweetId: string) => {
   const post = await prisma.tweet.findUnique({
     where: {
       id: tweetId,
@@ -42,6 +39,7 @@ const likeTweet = async (
         author: post.userId as string,
       },
     };
+  } else {
   }
 
   const validId = createUuid();
