@@ -1,89 +1,71 @@
-import { RouterOutputs } from "./../../../../apps/nextjs/src/utils/trpc";
 import { NotificationType } from "@acme/db";
 import { Context } from "../context";
 import { createUuid } from "../utils";
-import likeService from "./likeService";
-import tweetService from "./tweetService";
 
-const createLikeNotification = async (
+type ILikeNotificationProps = {
+  type: "LIKE";
+  isLiked: boolean;
+};
+
+type ICommentNotificationProps = {
+  type: "COMMENT";
+};
+
+type ICreateOrDeleteNotification = {
+  tweetId: string;
+  isSubTweet: boolean;
+  users: {
+    sender: string;
+    receiver: string;
+  };
+} & (ILikeNotificationProps | ICommentNotificationProps);
+
+const createOrDeleteNotification = async (
   ctx: Context,
-  data: Awaited<ReturnType<typeof likeService.likeTweet>>,
+  data: ICreateOrDeleteNotification,
 ) => {
-  if (data.users.author === data.users.likedBy) {
+  if (data.users.receiver === data.users.sender) {
     return;
   }
 
-  if (data.isLiked) {
-    const validId = createUuid();
+  const shouldDelete = data.type === NotificationType.LIKE && !data.isLiked;
+  const shouldPass = data.type === NotificationType.COMMENT && !data.isSubTweet;
 
-    return ctx.prisma.notification.create({
-      data: {
-        id: validId,
-        type: "LIKE",
-        isSubTweet: data.isSubTweet,
-        tweet: {
-          connect: {
-            id: data.tweetId,
-          },
-        },
-        receiver: {
-          connect: {
-            id: data.users.author,
-          },
-        },
-        sender: {
-          connect: {
-            id: data.users.likedBy,
-          },
-        },
+  if (shouldPass) {
+    return;
+  }
+
+  if (shouldDelete) {
+    return ctx.prisma.notification.deleteMany({
+      where: {
+        tweetId: data.tweetId,
+        senderId: data.users.sender,
+        receiverId: data.users.receiver,
+        type: data.type,
       },
     });
   }
-
-  return ctx.prisma.notification.deleteMany({
-    where: {
-      tweetId: data.tweetId,
-      senderId: data.users.likedBy,
-      receiverId: data.users.author,
-      type: NotificationType.LIKE,
-    },
-  });
-};
-
-const createTweetNotification = async (
-  ctx: Context,
-  data: Awaited<ReturnType<typeof tweetService.createTweet>>,
-) => {
-  if (data.users.author === data.users.commentedBy) {
-    return;
-  }
-
-  if (!data.parentId || !data.users.author) {
-    return;
-  }
-
-  console.log("creatinmg notif");
 
   const validId = createUuid();
 
   return ctx.prisma.notification.create({
     data: {
       id: validId,
-      type: "COMMENT",
-      isSubTweet: !!data.parentId,
+      type: data.type,
+      isSubTweet: data.isSubTweet,
       tweet: {
         connect: {
-          id: data.id,
+          id: data.tweetId,
         },
       },
       receiver: {
         connect: {
-          id: data.users.author,
+          id: data.users.receiver,
         },
       },
       sender: {
         connect: {
-          id: data.users.commentedBy,
+          id: data.users.sender,
         },
       },
     },
@@ -104,7 +86,6 @@ const getMyNotifications = async (ctx: Context) => {
 };
 
 export default {
-  createLikeNotification,
-  createTweetNotification,
+  createOrDeleteNotification,
   getMyNotifications,
 };

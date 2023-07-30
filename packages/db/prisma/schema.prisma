@@ -24,6 +24,23 @@ model User {
     likes        Like[]
     activities   Notification[] @relation(name: "sender")
     notification Notification[] @relation(name: "receiver")
+
+    followers Follow[] @relation(name: "follower")
+    following Follow[] @relation(name: "following")
+}
+
+model Follow {
+    id        String   @id @map("_id")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    follower   User?   @relation(name: "follower", fields: [followerId], references: [id])
+    followerId String?
+
+    following   User?   @relation(name: "following", fields: [followingId], references: [id])
+    followingId String?
+
+    @@unique([followerId, followingId])
 }
 
 model Tweet {

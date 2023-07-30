@@ -4,6 +4,7 @@ import { z } from "zod";
 import likeService from "../services/likeService";
 import notificationService from "../services/notificationService";
 import tweetService from "../services/tweetService";
+import { NotificationType } from "@acme/db";
 
 export const tweetRouter = router({
   all: publicProcedure
@@ -60,7 +61,16 @@ export const tweetRouter = router({
     .mutation(async ({ ctx, input }) => {
       const likeResponse = await likeService.likeTweet(ctx, input.tweetId);
 
-      await notificationService.createLikeNotification(ctx, likeResponse);
+      await notificationService.createOrDeleteNotification(ctx, {
+        type: NotificationType.LIKE,
+        isLiked: likeResponse.isLiked,
+        tweetId: input.tweetId,
+        isSubTweet: likeResponse.isSubTweet,
+        users: {
+          sender: likeResponse.users.likedBy,
+          receiver: likeResponse.users.author,
+        },
+      });
 
       return likeResponse;
     }),
@@ -70,7 +80,15 @@ export const tweetRouter = router({
     .mutation(async ({ ctx, input }) => {
       const tweetResponse = await tweetService.createTweet(ctx, input);
 
-      await notificationService.createTweetNotification(ctx, tweetResponse);
+      await notificationService.createOrDeleteNotification(ctx, {
+        type: NotificationType.COMMENT,
+        tweetId: tweetResponse.id,
+        isSubTweet: !!input.parentId,
+        users: {
+          sender: tweetResponse.users.commentedBy,
+          receiver: tweetResponse.users.author ?? "",
+        },
+      });
 
       return tweetResponse;
     }),
