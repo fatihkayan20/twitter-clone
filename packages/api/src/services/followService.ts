@@ -1,5 +1,5 @@
 import { Context } from "../context";
-import { createUuid } from "../utils";
+import { createUuid } from "../utils/createUuid";
 import { IToggleFollowInputs } from "../validators/follow/toggleFollowValidator";
 
 const toggleFollow = async (ctx: Context, input: IToggleFollowInputs) => {

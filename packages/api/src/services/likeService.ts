@@ -1,5 +1,5 @@
 import { Context } from "../context";
-import { createUuid } from "../utils";
+import { createUuid } from "../utils/createUuid";
 import { IToggleLikeInputs } from "../validators/tweet/toggleLikeValidator";
 import { prisma } from "./../../../db/index";
 

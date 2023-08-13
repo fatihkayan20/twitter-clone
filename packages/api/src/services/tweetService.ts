@@ -1,5 +1,5 @@
 import { Context } from "../context";
-import { createUuid } from "../utils";
+import { createUuid } from "../utils/createUuid";
 import { getNextCursor } from "../utils/infiniteQuery";
 import { ICreateTweetInputs } from "../validators/tweet/createTweetValidator";
 import { IGetAllTweetsInputs } from "../validators/tweet/getAllTweetsValidator";

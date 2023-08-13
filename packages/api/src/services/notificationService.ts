@@ -1,6 +1,6 @@
 import { NotificationType } from "@acme/db";
 import { Context } from "../context";
-import { createUuid } from "../utils";
+import { createUuid } from "../utils/createUuid";
 
 type ILikeNotificationProps = {
   type: "LIKE";
@@ -60,7 +60,7 @@ const createOrDeleteNotification = async (
 
   const validId = createUuid();
 
-  return ctx.prisma.notification.create({
+  const notification = ctx.prisma.notification.create({
     data: {
       id: validId,
       type: data.type,
@@ -84,6 +84,8 @@ const createOrDeleteNotification = async (
       },
     },
   });
+
+  return notification;
 };
 
 const getMyNotifications = async (ctx: Context) => {
