@@ -4,9 +4,11 @@ import Constants from "expo-constants";
 import { tokenCache } from "../utils/cache";
 import { TRPCProvider } from "../utils/trpc";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Platform, StatusBar, Text } from "react-native";
+import { Platform, StatusBar, Text, View } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { ThemeProvider, DefaultTheme } from "@react-navigation/native";
+import { NotificationListener } from "@/components/notification/NotificationListener";
+import { NotificationTabIcon } from "@/components/notification/NotificationTabIcon";
 
 const unwantedRoutes = ["(auth)/login", "(auth)/register"];
 
@@ -29,50 +31,48 @@ export default function Layout() {
         <TRPCProvider>
           <ThemeProvider value={theme}>
             <SignedIn>
-              <Tabs
-                screenOptions={{
-                  headerShown: false,
-                  tabBarShowLabel: false,
-                }}
-              >
-                <Tabs.Screen
-                  name="(home)"
-                  options={{
-                    title: "Home",
-                    tabBarIcon: ({ focused }) => (
-                      <AntDesign
-                        name="home"
-                        color={focused ? "#000" : "rgba(136, 153, 166, .7)"}
-                        size={24}
-                      />
-                    ),
+              <NotificationListener>
+                <Tabs
+                  screenOptions={{
+                    headerShown: false,
+                    tabBarShowLabel: false,
                   }}
-                />
-
-                <Tabs.Screen
-                  name="notification"
-                  options={{
-                    title: "Notifications",
-                    tabBarIcon: ({ focused }) => (
-                      <Ionicons
-                        name="notifications-outline"
-                        color={focused ? "#000" : "rgba(136, 153, 166, .7)"}
-                        size={24}
-                      />
-                    ),
-                  }}
-                />
-
-                {unwantedRoutes.map((route) => (
+                >
                   <Tabs.Screen
-                    key={route}
-                    name={route}
+                    name="(home)"
                     options={{
-                      href: null,
+                      title: "Home",
+                      tabBarIcon: ({ focused }) => (
+                        <AntDesign
+                          name="home"
+                          color={focused ? "#000" : "rgba(136, 153, 166, .7)"}
+                          size={24}
+                        />
+                      ),
                     }}
                   />
-                ))}
-              </Tabs>
+
+                  <Tabs.Screen
+                    name="notification"
+                    options={{
+                      title: "Notifications",
+                      tabBarIcon: ({ focused }) => (
+                        <NotificationTabIcon focused={focused} />
+                      ),
+                    }}
+                  />
+
+                  {unwantedRoutes.map((route) => (
+                    <Tabs.Screen
+                      key={route}
+                      name={route}
+                      options={{
+                        href: null,
+                      }}
+                    />
+                  ))}
+                </Tabs>
+              </NotificationListener>
             </SignedIn>
             <SignedOut>
               <Stack

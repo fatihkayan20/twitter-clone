@@ -1,6 +1,7 @@
 import { NotificationType } from "@acme/db";
 import { Context } from "../context";
 import { createUuid } from "../utils/createUuid";
+import { firebaseFunctions } from "../firebase";
 
 type ILikeNotificationProps = {
   type: "LIKE";
@@ -83,6 +84,11 @@ const createOrDeleteNotification = async (
         },
       },
     },
+  });
+
+  await firebaseFunctions.addNotification({
+    userId: data.users.receiver,
+    type: "notification",
   });
 
   return notification;
