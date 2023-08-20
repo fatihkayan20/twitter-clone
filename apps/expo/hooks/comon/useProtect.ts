@@ -6,6 +6,8 @@ export const useProtect = () => {
   const router = useRouter();
 
   if (isLoaded && !isSignedIn) {
-    router.push("/(auth)/login");
+    setTimeout(() => {
+      router.push("/(auth)/login");
+    }, 200);
   }
 };

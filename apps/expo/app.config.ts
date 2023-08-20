@@ -29,10 +29,12 @@ const defineConfig = (): ExpoConfig => ({
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#2e026d",
     },
+    package: "com.fatii.twitter",
+    googleServicesFile: "./google-services.json",
   },
   extra: {
     eas: {
-      projectId: "your-project-id",
+      projectId: "5f3f17ee-3e26-4336-956b-d6a46fcd231f",
     },
     CLERK_PUBLISHABLE_KEY,
   },

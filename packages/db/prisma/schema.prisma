@@ -19,6 +19,7 @@ model User {
     username       String    @unique
     profilePicture String?
     dateOfBirth    DateTime?
+    pushToken      String?
 
     tweets       Tweet[]
     likes        Like[]

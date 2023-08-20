@@ -2,6 +2,7 @@ import { useAuth } from "@clerk/clerk-expo";
 import * as React from "react";
 import { FB } from "../../firebase";
 import { onValue, ref } from "firebase/database";
+import { ExpoNotificationToken } from "./ExpoNotificationToken";
 
 interface NotificationListenerProps {
   children: React.ReactNode;
@@ -34,15 +35,13 @@ export const NotificationListener: React.FC<NotificationListenerProps> = ({
     });
   }, [userId]);
 
-  console.log({ notificationCount });
-
   return (
     <NotificationContext.Provider
       value={{
         notificationCount,
       }}
     >
-      {children}
+      <ExpoNotificationToken>{children}</ExpoNotificationToken>
     </NotificationContext.Provider>
   );
 };

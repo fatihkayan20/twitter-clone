@@ -31,6 +31,64 @@ type ICreateOrDeleteNotification = {
   | IFollowNotificationProps
 );
 
+const sendExpoNotification = async (
+  ctx: Context,
+  notification: ICreateOrDeleteNotification,
+) => {
+  const user = await ctx.prisma.user.findUnique({
+    where: {
+      id: notification.users.receiver,
+    },
+  });
+
+  if (!user || !user.pushToken) {
+    return;
+  }
+
+  const sender = await ctx.prisma.user.findUnique({
+    where: {
+      id: notification.users.sender,
+    },
+  });
+
+  if (!sender) {
+    return;
+  }
+
+  const titles: Record<NotificationType, string> = {
+    [NotificationType.LIKE]: "New like",
+    [NotificationType.COMMENT]: "New comment",
+    [NotificationType.FOLLOW]: "New follower",
+  };
+
+  const bodies: Record<NotificationType, string> = {
+    [NotificationType.LIKE]: `${sender.username} liked your tweet`,
+    [NotificationType.COMMENT]: `${sender.username} commented on your tweet`,
+    [NotificationType.FOLLOW]: `${sender.username} followed you`,
+  };
+
+  const message = {
+    to: user.pushToken,
+    sound: "default",
+    title: titles[notification.type],
+    body: bodies[notification.type],
+    data: {
+      tweetId: notification.tweetId,
+      senderId: notification.users.sender,
+    },
+  };
+
+  await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Accept-encoding": "gzip, deflate",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(message),
+  });
+};
+
 const createOrDeleteNotification = async (
   ctx: Context,
   data: ICreateOrDeleteNotification,
@@ -49,6 +107,11 @@ const createOrDeleteNotification = async (
   }
 
   if (shouldDelete) {
+    await firebaseFunctions.removeNotification({
+      userId: data.users.receiver,
+      type: "notification",
+    });
+
     return ctx.prisma.notification.deleteMany({
       where: {
         tweetId: data.tweetId,
@@ -90,6 +153,8 @@ const createOrDeleteNotification = async (
     userId: data.users.receiver,
     type: "notification",
   });
+
+  await sendExpoNotification(ctx, data);
 
   return notification;
 };

@@ -3,6 +3,7 @@ import serviceAccount from "./serviceAccountKey.json";
 
 import { addNotification } from "./functions/addNotification";
 import { readAllNotifications } from "./functions/readAllNotifications";
+import { removeNotification } from "./functions/removeNotification";
 
 const initializeApp = async () => {
   try {
@@ -29,6 +30,7 @@ const initializeApp = async () => {
 
 export const firebaseFunctions = {
   addNotification,
+  removeNotification,
   readAllNotifications,
   initializeApp,
 };

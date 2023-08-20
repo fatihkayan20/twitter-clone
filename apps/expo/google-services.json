@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "389251599803",
+    "firebase_url": "https://twitter-clone-380407-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "twitter-clone-380407",
+    "storage_bucket": "twitter-clone-380407.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389251599803:android:5a0f481f2a64d46649c89e",
+        "android_client_info": {
+          "package_name": "com.fatii.twitter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "389251599803-6qtc88si0deq545rgljdbot795o59emt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6c0upZlqXuzqGiFwPfxaaon1xD7kTH9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "389251599803-6qtc88si0deq545rgljdbot795o59emt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
