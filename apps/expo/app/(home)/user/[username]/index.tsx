@@ -18,7 +18,7 @@ import { UserProfileCustomHeader } from "@/components/userProfile/UserProfileCus
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
-export default function Page() {
+export default function Page(): JSX.Element {
   const { username } = useSearchParams();
   const { scrollY, handleScroll } = useScroll();
 
@@ -63,7 +63,7 @@ export default function Page() {
     );
   }
 
-  const handleRefresh = () => {
+  const handleRefresh = (): void => {
     refetchUserData();
     refetchTweets();
   };

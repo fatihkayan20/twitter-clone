@@ -42,7 +42,6 @@ const toggleLike = async (ctx: Context, input: IToggleLikeInputs) => {
         author: post.userId as string,
       },
     };
-  } else {
   }
 
   const validId = createUuid();

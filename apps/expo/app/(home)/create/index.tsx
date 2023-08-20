@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Text, TextInput, View } from "react-native";
+import { TextInput, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { GoBackButton } from "@/components/comon/GoBackButton";
+import { GoBackButton } from "@/components/common/GoBackButton";
 import { useUser } from "@clerk/clerk-expo";
 import { Avatar } from "@/components/tweet/Avatar";
 import { trpc } from "@/utils/trpc";

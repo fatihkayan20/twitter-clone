@@ -1,6 +1,4 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { z } from "zod";
-
 import likeService from "../services/likeService";
 import notificationService from "../services/notificationService";
 import tweetService from "../services/tweetService";

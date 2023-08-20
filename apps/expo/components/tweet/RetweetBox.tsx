@@ -6,9 +6,7 @@ import { useRouter, useSearchParams } from "expo-router";
 import { trpc } from "@/utils/trpc";
 import { LoadingButton } from "../button/LoadingButton";
 
-interface RetweetBoxProps {}
-
-export const RetweetBox: React.FC<RetweetBoxProps> = () => {
+export const RetweetBox: React.FC = () => {
   const { user } = useUser();
   const router = useRouter();
   const utils = trpc.useContext();

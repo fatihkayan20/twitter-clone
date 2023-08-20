@@ -1,11 +1,12 @@
+import React from "react";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Tabs, Stack } from "expo-router";
 import Constants from "expo-constants";
 import { tokenCache } from "../utils/cache";
 import { TRPCProvider } from "../utils/trpc";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Platform, StatusBar, Text, View } from "react-native";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import { ThemeProvider, DefaultTheme } from "@react-navigation/native";
 import { NotificationListener } from "@/components/notification/NotificationListener";
 import { NotificationTabIcon } from "@/components/notification/NotificationTabIcon";
@@ -20,7 +21,7 @@ const theme = {
   },
 };
 
-export default function Layout() {
+export default function Layout(): JSX.Element {
   return (
     <ClerkProvider
       publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}

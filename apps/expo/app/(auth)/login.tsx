@@ -24,7 +24,7 @@ const inputs: IInput[] = [
   },
 ];
 
-export default function Page() {
+export default function Page(): JSX.Element | null {
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
 
@@ -34,14 +34,14 @@ export default function Page() {
     error: "",
   });
 
-  const handleChange = (key: keyof typeof state, value: string) => {
+  const handleChange = (key: keyof typeof state, value: string): void => {
     setState((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
 
-  const handleNavigateRegister = () => {
+  const handleNavigateRegister = (): void => {
     router.push("/register");
   };
 
@@ -49,7 +49,7 @@ export default function Page() {
     return null;
   }
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
     const { email, password } = state;
     setState((prev) => ({ ...prev, error: "" }));
 
@@ -60,10 +60,7 @@ export default function Page() {
       })
       .then((result) => {
         if (result.status === "complete") {
-          console.log(result);
           setActive({ session: result.createdSessionId });
-        } else {
-          console.log(result);
         }
       })
       .catch((err) =>
@@ -96,7 +93,7 @@ export default function Page() {
       )}
 
       <Text className="mt-5 text-right ">
-        Don't you have an account?
+        Don&apos;t you have an account?
         <Text className="text-blue-500" onPress={handleNavigateRegister}>
           Register now...
         </Text>

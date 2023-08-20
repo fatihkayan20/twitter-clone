@@ -23,6 +23,7 @@ export const removeNotification = async ({
       userRef.set({
         notificationCount: 0,
       });
+
       return;
     }
 

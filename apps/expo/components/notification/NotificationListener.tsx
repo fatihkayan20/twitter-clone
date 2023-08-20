@@ -46,5 +46,5 @@ export const NotificationListener: React.FC<NotificationListenerProps> = ({
   );
 };
 
-export const useNotificationContext = () =>
+export const useNotificationContext = (): NotificationContextValue =>
   React.useContext(NotificationContext);

@@ -2,6 +2,12 @@ import * as React from "react";
 import { trpc } from "@/utils/trpc";
 import { useDebounce } from "../comon/useDebounce";
 
+interface ReturnType {
+  toggleFollow: () => void;
+  isFollowed: boolean;
+  isLoading: boolean;
+}
+
 interface IUseFollowProps {
   isFollowed: boolean;
   userId: string;
@@ -12,7 +18,7 @@ export const useFollow = ({
   isFollowed,
   username,
   userId,
-}: IUseFollowProps) => {
+}: IUseFollowProps): ReturnType => {
   const utils = trpc.useContext();
   const firstFollowStatus = React.useRef(isFollowed);
 
@@ -38,7 +44,7 @@ export const useFollow = ({
     firstFollowStatus.current = isFollowed;
   }, [isFollowed]);
 
-  const toggleFollow = async () => {
+  const toggleFollow = async (): Promise<void> => {
     setState((prev) => ({
       ...prev,
       isFollowed: !prev.isFollowed,

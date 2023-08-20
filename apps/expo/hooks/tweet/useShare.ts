@@ -1,7 +1,11 @@
 import * as React from "react";
 import { Share } from "react-native";
 
-export const useShare = (content: string) => {
+interface ReturnType {
+  handleShareTweet: () => void;
+}
+
+export const useShare = (content: string): ReturnType => {
   const handleShareTweet = React.useCallback(() => {
     Share.share({
       message: content,

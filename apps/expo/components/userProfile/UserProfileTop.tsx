@@ -31,16 +31,19 @@ export const UserProfileTop: React.FC<UserProfileTopProps> = ({
       </View>
 
       <View className="my-4">
+        {/* TODO: add bio to user profile */}
         <Text>
-          {user.bio ??
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry.   Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"}
+          {
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry.   Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
+          }
         </Text>
       </View>
 
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center space-x-1">
           <EvilIcons name="location" size={24} color="black" />
-          <Text>{user.location ?? "Earth"}</Text>
+          {/* TODO: add location to user profile */}
+          <Text>{"Earth"}</Text>
         </View>
 
         <View className="flex-row items-center space-x-1">

@@ -7,7 +7,7 @@ import { ITab } from "@/types/ITab";
 import { trpc } from "@/utils/trpc";
 import { Pressable, Text, View } from "react-native";
 
-export default function Page() {
+export default function Page(): JSX.Element {
   useProtect();
 
   const utils = trpc.useContext();
@@ -20,7 +20,7 @@ export default function Page() {
     ],
   });
 
-  const handleIndexChange = (index: number) => {
+  const handleIndexChange = (index: number): void => {
     setNavigationState((prev) => ({ ...prev, index }));
     utils.tweet.all.invalidate();
   };

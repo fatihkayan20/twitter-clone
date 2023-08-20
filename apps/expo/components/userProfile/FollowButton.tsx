@@ -1,5 +1,4 @@
 import { useFollow } from "@/hooks/userProfile/useFollow";
-import { trpc } from "@/utils/trpc";
 import { RouterOutput } from "@acme/api";
 import { useAuth } from "@clerk/clerk-expo";
 import * as React from "react";
@@ -13,8 +12,6 @@ export const FollowButton: React.FunctionComponent<FollowButtonProps> = ({
   user,
 }) => {
   const { userId, isLoaded } = useAuth();
-
-  console.log(user);
 
   const { isFollowed, toggleFollow } = useFollow({
     isFollowed: user.isFollowed,

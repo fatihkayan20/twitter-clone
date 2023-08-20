@@ -1,7 +1,8 @@
-import { GoBackButton } from "@/components/comon/GoBackButton";
+import React from "react";
 import { Stack } from "expo-router";
+import { GoBackButton } from "@/components/common/GoBackButton";
 
-export default function TweetLayout() {
+export default function TweetLayout(): JSX.Element {
   return (
     <Stack>
       <Stack.Screen

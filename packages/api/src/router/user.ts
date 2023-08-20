@@ -1,4 +1,3 @@
-import { z } from "zod";
 import userService from "../services/userService";
 import { router, protectedProcedure } from "../trpc";
 import { getByUsernameValidator } from "../validators/user/getByUsernameValidator";

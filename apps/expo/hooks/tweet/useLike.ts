@@ -2,13 +2,24 @@ import * as React from "react";
 import { trpc } from "@/utils/trpc";
 import { useDebounce } from "../comon/useDebounce";
 
+interface ReturnType {
+  toggleLike: () => void;
+  isLiked: boolean;
+  likeCount: number;
+  isLoading: boolean;
+}
+
 interface IUseLikeProps {
   isLiked: boolean;
   likeCount: number;
   tweetId: string;
 }
 
-export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
+export const useLike = ({
+  isLiked,
+  likeCount,
+  tweetId,
+}: IUseLikeProps): ReturnType => {
   const utils = trpc.useContext();
   const firstLikeStatus = React.useRef(isLiked);
 
@@ -36,7 +47,7 @@ export const useLike = ({ isLiked, likeCount, tweetId }: IUseLikeProps) => {
     firstLikeStatus.current = isLiked;
   }, [isLiked, likeCount]);
 
-  const toggleLike = async () => {
+  const toggleLike = async (): Promise<void> => {
     setState((prev) => ({
       ...prev,
       isLiked: !prev.isLiked,

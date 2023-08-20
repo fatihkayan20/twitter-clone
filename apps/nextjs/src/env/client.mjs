@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable lines-around-comment */
 // @ts-check
 import { clientEnv, clientSchema } from "./schema.mjs";
 

@@ -6,7 +6,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { GoBackButton } from "../comon/GoBackButton";
+import { GoBackButton } from "../common/GoBackButton";
 import { Ionicons } from "@expo/vector-icons";
 
 interface UserProfileCustomHeaderProps {
@@ -27,6 +27,7 @@ export const UserProfileCustomHeader: React.FC<
       [0, 0.7],
       Extrapolate.CLAMP,
     );
+
     return {
       backgroundColor: `rgba(0,0,0,${opacity})`,
     };

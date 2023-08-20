@@ -1,6 +1,7 @@
+import React from "react";
 import { Stack } from "expo-router";
 
-export default function NotificationLayout() {
+export default function NotificationLayout(): JSX.Element {
   return (
     <Stack>
       <Stack.Screen

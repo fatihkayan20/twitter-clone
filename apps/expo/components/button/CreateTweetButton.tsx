@@ -6,7 +6,7 @@ import { Pressable } from "react-native";
 export const CreateTweetButton: React.FC = () => {
   const router = useRouter();
 
-  const handlePress = () => {
+  const handlePress = (): void => {
     router.push("/(home)/create");
   };
 

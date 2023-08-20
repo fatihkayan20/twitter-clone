@@ -5,6 +5,11 @@ import { addNotification } from "./functions/addNotification";
 import { readAllNotifications } from "./functions/readAllNotifications";
 import { removeNotification } from "./functions/removeNotification";
 
+interface FirebaseInitError {
+  stack: string;
+  message: string;
+}
+
 const initializeApp = async () => {
   try {
     admin.initializeApp({
@@ -16,14 +21,12 @@ const initializeApp = async () => {
       databaseURL:
         "https://twitter-clone-380407-default-rtdb.europe-west1.firebasedatabase.app",
     });
-    console.log("Initialized.");
   } catch (error) {
-    /*
-     * We skip the "already exists" message which is
-     * not an actual error when we're hot-reloading.
-     */
-    if (!/already exists/u.test(error.message)) {
-      console.error("Firebase admin initialization error", error.stack);
+    const typedError = error as FirebaseInitError;
+
+    if (!/already exists/u.test(typedError.message)) {
+      // eslint-disable-next-line no-console
+      console.error("Firebase admin initialization error", typedError.stack);
     }
   }
 };

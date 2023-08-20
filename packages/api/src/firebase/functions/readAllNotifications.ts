@@ -13,6 +13,7 @@ export const readAllNotifications = async ({ userId }: { userId: string }) => {
       userRef.set({
         notificationCount: 0,
       });
+
       return;
     }
 

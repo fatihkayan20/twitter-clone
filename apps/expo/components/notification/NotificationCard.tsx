@@ -15,7 +15,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
 }) => {
   const router = useRouter();
 
-  const handleNavigateDetail = () => {
+  const handleNavigateDetail = (): void => {
     router.push(
       `/(home)/user/${notification.receiver?.username}${
         notification.tweetId ? `/status/${notification.tweetId}` : ""
@@ -23,7 +23,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
     );
   };
 
-  const handleNavigateToUserProfile = () => {
+  const handleNavigateToUserProfile = (): void => {
     router.push(`/(home)/user/${notification.receiver?.username}`);
   };
 

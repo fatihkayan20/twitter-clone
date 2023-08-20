@@ -5,7 +5,7 @@ import { trpc } from "@/utils/trpc";
 import { NotificationCard } from "@/components/notification/NotificationCard";
 import { useFocusEffect } from "expo-router";
 
-export default function Page() {
+export default function Page(): JSX.Element {
   const { isLoading, data: notifications } = trpc.notification.all.useQuery();
   const utils = trpc.useContext();
 

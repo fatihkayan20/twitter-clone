@@ -17,7 +17,7 @@ const webhookSecret: string = process.env.WEBHOOK_SECRET || "";
 export default async function handler(
   req: NextApiRequestWithSvixRequiredHeaders,
   res: NextApiResponse,
-) {
+): Promise<void> {
   const payload = (await buffer(req)).toString();
   const headers = req.headers;
   const wh = new Webhook(webhookSecret);
@@ -68,6 +68,7 @@ export default async function handler(
         },
       })
       .catch((err) => {
+        // eslint-disable-next-line no-console
         console.log({ err: err.message });
       });
   }

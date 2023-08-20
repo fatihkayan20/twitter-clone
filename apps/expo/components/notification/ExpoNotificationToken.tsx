@@ -17,7 +17,9 @@ Notifications.setNotificationHandler({
   }),
 });
 
-async function registerForPushNotificationsAsync() {
+async function registerForPushNotificationsAsync(): Promise<
+  Notifications.ExpoPushToken | undefined
+> {
   let token;
   if (Device.isDevice) {
     const { status: existingStatus } =
@@ -29,6 +31,7 @@ async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== "granted") {
       alert("Failed to get push token for push notification!");
+
       return;
     }
 
@@ -54,12 +57,6 @@ async function registerForPushNotificationsAsync() {
 export const ExpoNotificationToken: React.FC<ExpoNotificationTokenProps> = ({
   children,
 }) => {
-  const [expoPushToken, setExpoPushToken] = React.useState<
-    Notifications.ExpoPushToken | undefined
-  >();
-  const [notification, setNotification] = React.useState<
-    Notifications.Notification | undefined
-  >();
   const notificationListener = React.useRef<Notifications.Subscription>();
   const responseListener = React.useRef<Notifications.Subscription>();
 
@@ -68,21 +65,22 @@ export const ExpoNotificationToken: React.FC<ExpoNotificationTokenProps> = ({
 
   React.useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
       handleSetPushToken({
         token: token?.data || "",
       });
     });
 
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-      });
+    // TODO: handle notifications
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
+    // notificationListener.current =
+    //   Notifications.addNotificationReceivedListener((notification) => {
+    //     console.log(notification);
+    //   });
+
+    // responseListener.current =
+    //   Notifications.addNotificationResponseReceivedListener((response) => {
+    //     console.log(response);
+    //   });
 
     return () => {
       notificationListener.current &&

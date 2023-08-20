@@ -1,10 +1,12 @@
 import { createTRPCReact } from "@trpc/react-query";
 import type { AppRouter } from "@acme/api";
+
 /**
  * Extend this function when going to production by
  * setting the baseUrl to your production API URL.
  */
 import Constants from "expo-constants";
+
 /**
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
@@ -20,7 +22,7 @@ import { useAuth } from "@clerk/clerk-expo";
  */
 export const trpc = createTRPCReact<AppRouter>();
 
-const getBaseUrl = () => {
+const getBaseUrl = (): string => {
   /**
    * Gets the IP address of your host-machine. If it cannot automatically find it,
    * you'll have to manually set it. NOTE: Port 3000 should work for most but confirm
@@ -29,6 +31,7 @@ const getBaseUrl = () => {
   const localhost = Constants.manifest?.debuggerHost?.split(":")[0];
   if (!localhost)
     throw new Error("failed to get localhost, configure it manually");
+
   return `http://${localhost}:3000`;
 };
 
@@ -44,6 +47,7 @@ export const TRPCProvider: React.FC<{
         httpBatchLink({
           async headers() {
             const authToken = await getToken();
+
             return {
               Authorization: authToken ?? undefined,
             };

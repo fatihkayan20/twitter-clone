@@ -58,7 +58,7 @@ interface IClerkSignUpError {
   }[];
 }
 
-export default function Page() {
+export default function Page(): JSX.Element {
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
 
@@ -82,18 +82,18 @@ export default function Page() {
     username: "",
   });
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: string, value: string): void => {
     setState((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
 
-  const handleNavigateLogin = () => {
+  const handleNavigateLogin = (): void => {
     router.push("/login");
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (!isLoaded) {
       return;
     }
@@ -114,6 +114,7 @@ export default function Page() {
         confirmPassword:
           "Password must be at least 8 characters long and match the confirm password field.",
       }));
+
       return;
     }
 
@@ -128,14 +129,7 @@ export default function Page() {
       });
 
       // send the email.
-      await signUp
-        .prepareEmailAddressVerification({ strategy: "email_code" })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(JSON.stringify(err, null, 2));
-        });
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       // change the UI to our pending section.
       setState((prev) => ({
@@ -161,26 +155,18 @@ export default function Page() {
     }
   };
 
-  const onPressVerify = async () => {
+  const onPressVerify = async (): Promise<void> => {
     if (!isLoaded) {
       return;
     }
 
-    try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: state.code,
-      });
-      if (completeSignUp.status !== "complete") {
-        /*  investigate the response, to see if there was an error
-         or if the user needs to complete more steps.*/
-        console.log(JSON.stringify(completeSignUp, null, 2));
-      }
-      if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        router.push("/tweets");
-      }
-    } catch (err) {
-      console.error(JSON.stringify(err, null, 2));
+    const completeSignUp = await signUp.attemptEmailAddressVerification({
+      code: state.code,
+    });
+
+    if (completeSignUp.status === "complete") {
+      await setActive({ session: completeSignUp.createdSessionId });
+      router.push("/tweets");
     }
   };
 

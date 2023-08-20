@@ -23,6 +23,7 @@ export const addNotification = async ({
       userRef.set({
         notificationCount: 1,
       });
+
       return;
     }
 

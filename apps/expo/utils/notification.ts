@@ -2,7 +2,7 @@ import { RouterOutput } from "@/../../packages/api";
 
 export const getNotificationText = (
   notification: RouterOutput["notification"]["all"][number],
-) => {
+): string => {
   const notificationText = {
     ["LIKE"]: `liked your ${notification.isSubTweet ? "comment" : "tweet"}`,
     ["COMMENT"]: `commented on your post`,

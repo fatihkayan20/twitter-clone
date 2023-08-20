@@ -1,7 +1,7 @@
 import { useAuth } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 
-export const useProtect = () => {
+export const useProtect = (): void => {
   const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
 
