@@ -17,7 +17,7 @@ export const TweetCard: React.FunctionComponent<TweetCardProps> = ({
 
   const handleNavigateToTweetDetail = React.useCallback(() => {
     router.push(`/(home)/user/${tweet.user?.username}/status/${tweet.id}`);
-  }, [tweet.id, router]);
+  }, [tweet.id, tweet.user?.username, router]);
 
   const handleNavigateToUserProfile = React.useCallback(() => {
     router.push(`/(home)/user/${tweet.user?.username}`);

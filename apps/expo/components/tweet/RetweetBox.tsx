@@ -46,7 +46,7 @@ export const RetweetBox: React.FC = () => {
         }`}
       >
         <View className="flex-row space-x-2 px-3">
-          <Avatar url={user?.profileImageUrl} size={30} />
+          <Avatar url={user?.imageUrl} size={30} />
           <TextInput
             className="flex-1  rounded-3xl border border-gray-400 p-2"
             multiline

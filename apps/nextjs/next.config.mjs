@@ -10,9 +10,13 @@ const config = {
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: ["@acme/api", "@acme/db"],
+
   // We already do linting on GH actions
   eslint: {
     ignoreDuringBuilds: !!process.env.CI,
+  },
+  images: {
+    domains: ["www.gravatar.com", "img.clerk.com"],
   },
 };
 

@@ -49,7 +49,7 @@ const CreateTweet: React.FC = () => {
       </View>
 
       <View className="flex-row space-x-3 p-2">
-        <Avatar url={user?.profileImageUrl} size={30} />
+        <Avatar url={user?.imageUrl} size={30} />
         <TextInput
           className="flex-1 "
           multiline
