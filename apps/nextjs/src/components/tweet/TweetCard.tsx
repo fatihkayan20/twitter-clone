@@ -16,9 +16,13 @@ export const TweetCard: React.FC<TweetCardProps> = ({ tweet }) => {
     router.push(`/user/${tweet.user?.username}/status/${tweet.id}`);
   }, [router, tweet.user?.username, tweet.id]);
 
-  const handleNavigateToUserProfile = React.useCallback(() => {
-    router.push(`/user/${tweet.user?.username}`);
-  }, [tweet.user?.username, router]);
+  const handleNavigateToUserProfile = React.useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
+      router.push(`/user/${tweet.user?.username}`);
+    },
+    [tweet.user?.username, router],
+  );
 
   return (
     <button

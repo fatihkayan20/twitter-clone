@@ -2,9 +2,9 @@ import { BackButton } from "@/components/common/BackButton";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { CreateTweetBox } from "@/components/home/CreateTweetBox";
 import { MainTweet } from "@/components/tweet/MainTweet";
-import { RetweetBox } from "@/components/tweet/RetweetBox";
 import { TweetCard } from "@/components/tweet/TweetCard";
 import { trpc } from "@/utils/trpc";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import * as React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -66,6 +66,13 @@ const TweetDetailPage: React.FC = () => {
 
   return (
     <div className="flex-1 ">
+      <Head>
+        <title>
+          {tweetDetail?.user?.name} on Twixer: &rsquo;{tweetDetail?.content}
+          &rsquo;
+        </title>
+      </Head>
+
       <BackButton title="Post" />
 
       <MainTweet tweet={tweetDetail} />

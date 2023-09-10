@@ -1,4 +1,3 @@
-import { NotificationType } from ".prisma/client";
 import { RouterOutput } from "@/../../packages/api";
 import { Ionicons } from "@expo/vector-icons";
 import * as React from "react";
@@ -11,13 +10,9 @@ export const NotificationTypeIcon: React.FC<NotificationTypeIconProps> = ({
   notificationType,
 }) => {
   const icons = {
-    [NotificationType.LIKE]: <Ionicons name="heart" size={30} color="red" />,
-    [NotificationType.COMMENT]: (
-      <Ionicons name="repeat" size={30} color="black" />
-    ),
-    [NotificationType.FOLLOW]: (
-      <Ionicons name="person-outline" size={30} color="black" />
-    ),
+    ["LIKE"]: <Ionicons name="heart" size={30} color="red" />,
+    ["COMMENT"]: <Ionicons name="repeat" size={30} color="black" />,
+    ["FOLLOW"]: <Ionicons name="person-outline" size={30} color="black" />,
   };
 
   return icons[notificationType] ?? null;

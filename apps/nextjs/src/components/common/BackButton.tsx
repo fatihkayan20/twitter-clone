@@ -3,7 +3,7 @@ import * as React from "react";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 
 interface BackButtonProps {
-  title: string;
+  title: string | React.ReactNode;
 }
 
 export const BackButton: React.FC<BackButtonProps> = ({ title }) => {
@@ -17,7 +17,7 @@ export const BackButton: React.FC<BackButtonProps> = ({ title }) => {
     <>
       <button
         onClick={handleGoBack}
-        className="fixed top-0 left-20 flex w-full items-center space-x-10  p-3"
+        className="fixed top-0 left-20 z-10 flex w-full items-center  space-x-10 bg-black/80 p-3"
       >
         <AiOutlineArrowLeft size={20} className=" text-black dark:text-white" />
         <span className="text-2xl font-semibold text-black dark:text-white">

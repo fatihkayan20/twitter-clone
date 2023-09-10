@@ -10,7 +10,7 @@ export const Avatar: React.FC<AvatarProps> = ({ url, size }) => {
   return (
     <Image
       src={url ?? ""}
-      className="h-11 w-11 rounded-full "
+      className={`rounded-full ${!size ? "h-11 w-11" : ""} `}
       width={size ?? 40}
       height={size ?? 40}
       alt="avatar"
