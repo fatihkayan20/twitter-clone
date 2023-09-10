@@ -1,5 +1,5 @@
-import { NotificationType } from ".prisma/client";
 import { RouterOutput } from "@/../../packages/api";
+import { NotificationType } from ".prisma/client";
 
 export const getNotificationText = (
   notification: RouterOutput["notification"]["all"][number],

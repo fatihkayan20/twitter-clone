@@ -1,7 +1,7 @@
-import { NotificationType } from ".prisma/client";
 import { RouterOutput } from "@/../../packages/api";
-import { Ionicons } from "@expo/vector-icons";
+import { NotificationType } from ".prisma/client";
 import * as React from "react";
+import { IoIosHeart, IoIosPerson, IoIosRepeat } from "react-icons/io";
 
 interface NotificationTypeIconProps {
   notificationType: RouterOutput["notification"]["all"][number]["type"];
@@ -11,12 +11,12 @@ export const NotificationTypeIcon: React.FC<NotificationTypeIconProps> = ({
   notificationType,
 }) => {
   const icons = {
-    [NotificationType.LIKE]: <Ionicons name="heart" size={30} color="red" />,
+    [NotificationType.LIKE]: <IoIosHeart size={30} className="text-red-700" />,
     [NotificationType.COMMENT]: (
-      <Ionicons name="repeat" size={30} color="black" />
+      <IoIosRepeat size={30} className="text-black dark:text-gray-500" />
     ),
     [NotificationType.FOLLOW]: (
-      <Ionicons name="person-outline" size={30} color="black" />
+      <IoIosPerson size={30} className="text-black dark:text-gray-500" />
     ),
   };
 

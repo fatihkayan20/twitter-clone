@@ -2,6 +2,8 @@ import * as React from "react";
 import { FromInput } from "../components/form/FormInput";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/router";
+import { NextPageWithLayout } from "@/types/NextPageWithLayout";
+import { BlankLayout } from "@/components/layout/BlankLayout";
 
 interface IInput {
   placeholder: string;
@@ -23,7 +25,7 @@ const inputs: IInput[] = [
   },
 ];
 
-const LoginPage: React.FC = () => {
+const LoginPage: NextPageWithLayout = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const router = useRouter();
 
@@ -68,8 +70,10 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full flex-1 flex-col  justify-center  p-3">
-      <p className="text-xl font-bold dark:text-white">Login your account</p>
+    <div className="flex flex-1 flex-col  justify-center p-10">
+      <h3 className="mb-4 text-3xl font-bold dark:text-white">
+        Login your account
+      </h3>
       {inputs.map((input) => (
         <FromInput
           placeholder={input.placeholder}
@@ -82,7 +86,7 @@ const LoginPage: React.FC = () => {
 
       <button
         onClick={handleLogin}
-        className="items-center rounded-md bg-blue-500 p-3 text-white"
+        className="mt-5 items-center self-end rounded-md bg-blue-500 p-3 text-white"
       >
         <p className="text-white">Login</p>
       </button>
@@ -99,6 +103,10 @@ const LoginPage: React.FC = () => {
       </p>
     </div>
   );
+};
+
+LoginPage.getLayout = (page) => {
+  return <BlankLayout>{page}</BlankLayout>;
 };
 
 export default LoginPage;

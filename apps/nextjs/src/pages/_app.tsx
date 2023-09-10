@@ -1,23 +1,30 @@
 // src/pages/_app.tsx
 import * as React from "react";
 import "../styles/globals.css";
-import type { AppType } from "next/app";
+import type { AppProps } from "next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 import { trpc } from "../utils/trpc";
-import { LeftSidebar } from "../components/layout/LeftSidebar";
 import { UnAuthenticatedChecker } from "../components/common/UnAuthenticatedChecker";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { NextPageWithLayout } from "@/types/NextPageWithLayout";
 
-const MyApp: AppType = ({ Component, pageProps: { ...pageProps } }) => {
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+const MyApp = ({
+  Component,
+  pageProps: { ...pageProps },
+}: AppPropsWithLayout): React.ReactElement => {
+  const getLayout =
+    Component.getLayout ||
+    ((page: React.ReactNode) => <MainLayout>{page}</MainLayout>);
+
   return (
     <ClerkProvider {...pageProps}>
-      <div className="flex min-h-screen dark:bg-black dark:text-white">
-        <UnAuthenticatedChecker>
-          <LeftSidebar />
-          <div className=" ml-20 flex-1">
-            <Component {...pageProps} />
-          </div>
-        </UnAuthenticatedChecker>
-      </div>
+      <UnAuthenticatedChecker>
+        {getLayout(<Component {...pageProps} />)}
+      </UnAuthenticatedChecker>
     </ClerkProvider>
   );
 };
